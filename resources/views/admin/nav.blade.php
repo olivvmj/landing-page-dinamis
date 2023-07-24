@@ -38,10 +38,18 @@
                     </form>
                 </div>
             </li>
-            <li class="nav-item">
+            <li>
+                <a href="{{ url('/logout') }}">
+                    <button type="submit" class="btn btn-block btn-primary">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout
+                    </button>
+                </a>
+            </li>
+            {{-- <li class="nav-item">
                 <button type="button" class="btn btn-block btn-primary">
                     Logout
                 </button>
-            </li>
+            </li> --}}
         </ul>
     </nav>
