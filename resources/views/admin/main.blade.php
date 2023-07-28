@@ -3,119 +3,48 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <title>{{ env("APP_NAME") }} - @yield("title_content")</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    @include('admin.layouts.css')
 
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/jqvmap/jqvmap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/dist/css/adminlte.min.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/daterangepicker/daterangepicker.css">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{{ asset('admin') }}/plugins/summernote/summernote-bs4.min.css">
+    @yield("component_css")
 </head>
+    
+    <body>
+        <!-- ======= Header ======= -->
+        <header id="header" class="header fixed-top d-flex align-items-center"  
+        transition: all 0.5s; z-index: 997;height: 60px;box-shadow: 0px 2px 20px rgb(0 26 71 / 60%);padding-left: 20px;">
+            @include('admin.layouts.header')
+        </header><!-- End Header -->
+        
+        <!-- ======= Sidebar ======= -->
+        <aside id="sidebar" class="sidebar">
+            @include('admin.layouts.sidebar')
+        </aside><!-- End Sidebar-->
+        
+        <main id="main" class="main">
+            <div class="pagetitle">
+                <h1>
+                    @yield("page_title")
+                </h1>
+                <nav>
+                    @yield("breadcrumb")
+                </nav>
+            </div><!-- End Page Title -->
+            @yield('content')
+        </main><!-- End #main -->
+        <br><br><br>
+        <!-- ======= Footer ======= -->
+        {{-- <footer id="footer" class="footer">
+            @include('admin.layouts.footer')
+        </footer><!-- End Footer --> --}}
+        
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+        @include('admin.layouts.js')
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-
-        {{-- <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('admin') }}/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60"
-                width="60">
-        </div> --}}
-
-        <!-- Navbar -->
-        @include('admin.nav')
-        <!-- /.navbar -->
-
-        <!-- Main Sidebar Container -->
-        @include('admin.sidebar')
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-                @yield('admin')
-            </section>
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
-        @include('admin.footer')
-
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
-    </div>
-    <!-- ./wrapper -->
-
-    <!-- jQuery -->
-    <script src="{{ asset('admin') }}/plugins/jquery/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="{{ asset('admin') }}/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('admin') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="{{ asset('admin') }}/plugins/chart.js/Chart.min.js"></script>
-    <!-- Sparkline -->
-    <script src="{{ asset('admin') }}/plugins/sparklines/sparkline.js"></script>
-    <!-- JQVMap -->
-    <script src="{{ asset('admin') }}/plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="{{ asset('admin') }}/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="{{ asset('admin') }}/plugins/jquery-knob/jquery.knob.min.js"></script>
-    <!-- daterangepicker -->
-    <script src="{{ asset('admin') }}/plugins/moment/moment.min.js"></script>
-    <script src="{{ asset('admin') }}/plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{ asset('admin') }}/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Summernote -->
-    <script src="{{ asset('admin') }}/plugins/summernote/summernote-bs4.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="{{ asset('admin') }}/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('admin') }}/dist/js/adminlte.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('admin') }}/dist/js/demo.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('admin') }}/dist/js/pages/dashboard.js"></script>
-</body>
-
+        @yield("component_js")
+    </body>
 </html>
