@@ -2,7 +2,7 @@
 
 @section("title_content", "Kelola Landing Page")
 
-@section("page_title" , "Tentang Parkirkan")
+@section("page_title" , "Manfaat Parkirkan")
 
 @section("breadcrumb")
 <ol class="breadcrumb">
@@ -22,7 +22,7 @@
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title" style="margin-bottom: 0px;">Tentang Parkirkan</h5>
+                    <h5 class="card-title" style="margin-bottom: 0px;">Manfaat Parkirkan</h5>
                     <div>
                         <a class="btn btn-primary modal-effect mb-3 data-table-btn" data-bs-effect="effect-super-scaled" onclick="create()">
                             <span class="fe fe-plus"></span>Tambah Data Baru
@@ -35,8 +35,9 @@
                                 <tr>
                                     <th style="width: 5%">No</th>
                                     <th>Judul</th>
-                                    <th>Deskripsi</th>
+                                    <th>Sub Judul</th>
                                     <th style="width: 1%">Image</th>
+                                    <th>Manfaat</th>
                                     <th>Option</th>
                                 </tr>
                             </thead>
@@ -72,8 +73,9 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <div class="mb-3">
-                                            <label for="deskripsi" class="form-label">Deskripsi Aplikasi</label>
-                                            <input type="text" id="deskripsi" class="form-control" name="deskripsi" value="{{ old('deskripsi') }}">
+                                            <input type="hidden" id="id" name="id">
+                                            <label for="subjudul" class="form-label">Sub Judul</label>
+                                            <input type="text" name="subjudul" class="form-control" id="subjudul" value="{{ old('subjudul') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -82,6 +84,14 @@
                                         <div class="mb-3">
                                             <label for="image" class="form-label">Image</label>
                                             <input type="file" id="image" class="dropify" name="image" data-height="150">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="mb-3">
+                                            <label for="manfaat" class="form-label">Manfaat Menggunakan Parkirkan</label>
+                                            <input type="text" id="manfaat" class="form-control" name="manfaat" value="{{ old('manfaat') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +150,7 @@
             processing: true,
             serverSide: true,
             autoWidth: false,
-            ajax: "{{ route('kelola-tentang.datatable') }}",
+            ajax: "{{ route('kelola-manfaat.datatable') }}",
             columnDefs: [
             {
                 targets: 0,
@@ -168,15 +178,25 @@
                         $(td).text(txt.substr(0, 150) + '...')
                     }
                 },
+
             },
             {
-                
                 targets: 3,
                 render: function(data, type, full, meta) {
                     var imagePath = full.image;
-                    var imageUrl = imagePath ? "{{ url('/storage/') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
+                    var imageUrl = imagePath ? "{{ url('/storage/landingpage/manfaat/') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
                     return `<img class="img-thumbnail wd-50p wd-sm-100" src="${imageUrl}">`;
                 }
+            },
+            {
+                targets: 4,
+                createdCell: function(td, cellData, rowData, row, col) {
+                    $(td).html($(td).text())
+                    if($(td).text().length > 150) {
+                        let txt = $(td).text()
+                        $(td).text(txt.substr(0, 150) + '...')
+                    }
+                },
             },
             {
                 targets: -1,
@@ -196,8 +216,9 @@
             columns: [
                 { data: null },
                 { data: 'judul'},
-                { data: 'deskripsi'},
+                { data: 'subjudul'},
                 { data: 'image'},
+                { data: 'manfaat'},
                 { data: 'id'}, 
             ]
         });
@@ -220,7 +241,7 @@
         $('#modal_form').modal('show');
         
         $('.dropify').dropify();
-        $('.modal-title').text('Tambah Data Tentang Parkirkan');
+        $('.modal-title').text('Tambah Data Manfaat Parkirkan');
         $('#btnSave').on('click', function(){
             submit();
         })
@@ -228,7 +249,7 @@
     
     function edit(id) {
         submit_method = 'edit';
-        var url = "{{ route('kelola-tentang.edit', ':id') }}";
+        var url = "{{ route('kelola-manfaat.edit', ':id') }}";
         url = url.replace(':id', id);
         
         $.get(url, function (response) {
@@ -238,17 +259,18 @@
             $('#id').val(data.id);
             $('#modal_form').modal('show');
             $('.dropify').dropify();
-            $('.modal-title').text('Edit Data About');
-            $('#judul').val(data.about.judul);
-            $('#deskripsi').val(data.deskripsi); 
+            $('.modal-title').text('Edit Data Manfaat');
+            $('#judul').val(data.manfaat.judul);
+            $('#subjudul').val(data.subjudul);
             // Tampilkan gambar lama jika ada
-            var imageName = data.about.image;
+            var imageName = data.manfaat.image;
             if (imageName) {
                 var imageUrl = "{{ url('storage') }}/" + imageName;
                 $('#image').attr('src', imageUrl);
             } else {
                 $('#image').attr('src', "{{ asset('admin/assets/img/default_gambar.png') }}");
             }
+            $('#manfaat').val(data.manfaat); 
             
         });
         
@@ -257,30 +279,70 @@
         })
     }
 
+    function destroy(id) {
+        var url = "{{ route('kelola-manfaat.destroy',":id") }}";
+        url = url.replace(':id', id);
+    
+        Swal.fire({
+            title: "Yakin ingin menghapus data ini?",
+            text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
+            icon: "warning",
+            showCancelButton  : true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor : "#d33",
+            confirmButtonText : "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url    : url,
+                    type   : "delete",
+                    data: { 
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        "id":id },
+                    dataType: "JSON",
+                    success: function(data) {
+                        table.ajax.reload();
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Data berhasil dihapus',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                })
+            }
+        })
+    } 
+
     function submit() {
         var id = $('#id').val();
         var form = $('#form')[0];
         var judul = $('#judul').val();
-        var deskripsi = $('#deskripsi').val();
+        var subjudul = $('#subjudul').val();
         var image = $('#image').prop('files')[0];
+        var manfaat = $('#manfaat').val();
 
         console.log("ID:", id);
         console.log("Judul Section:", judul);
-        console.log("Deskripsi Aplikasi:", deskripsi);
+        console.log("SubJudul Section:", subjudul);
         console.log("Image:", image);
+        console.log("Manfaat Parkirkan:", manfaat);
 
         var formData = new FormData(form);
         formData.append('judul', judul);
-        formData.append('deskripsi', deskripsi);
+        formData.append('subjudul', subjudul);
+        formData.append('manfaat', manfaat);
 
         console.log("FormData:", formData);
 
         var url = "";
 
         if (submit_method === 'create') {
-            url = "{{ route('kelola-tentang.store') }}";
+            url = "{{ route('kelola-manfaat.store') }}";
         } else if (submit_method === 'edit') {
-            url = "{{ route('kelola-tentang.update', ':id') }}";
+            url = "{{ route('kelola-manfaat.update', ':id') }}";
             url = url.replace(':id', id);
             formData.append('_method', 'PUT');
         }
@@ -297,8 +359,8 @@
             data: formData,
             success: function(data) {
                 if (data.status) {
-                    var about = data.about;
-                    console.log("About:", about);
+                    var manfaat = data.manfaat;
+                    console.log("manfaat:", manfaat);
                     $('#modal_form').modal('hide');
                     Swal.fire({
                         toast: false,
@@ -343,42 +405,5 @@
             },
         });
     }
-
-    function destroy(id) {
-        var url = "{{ route('kelola-tentang.destroy',":id") }}";
-        url = url.replace(':id', id);
-    
-        Swal.fire({
-            title: "Yakin ingin menghapus data ini?",
-            text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
-            icon: "warning",
-            showCancelButton  : true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor : "#d33",
-            confirmButtonText : "Ya, Hapus!"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url    : url,
-                    type   : "delete",
-                    data: { 
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        "id":id },
-                    dataType: "JSON",
-                    success: function(data) {
-                        table.ajax.reload();
-                        Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Data berhasil dihapus',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                })
-            }
-        })
-    } 
 </script>
 @endsection

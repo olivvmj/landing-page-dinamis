@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\About;
+use App\Models\Manfaat;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,16 +12,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class TentangController extends Controller
+class ManfaatController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data["about"] = About::all();
+        $data["manfaat"] = Manfaat::all();
         
-        return view('admin.about.index', $data);
+        return view('admin.manfaat.index', $data);
     }
 
     /**
@@ -44,9 +44,7 @@ class TentangController extends Controller
     public function store(Request $request)
     {
         $validatedData = Validator::make($request->all(),[
-            'judul' => 'required',
-            'subjudul' => 'required',
-            'deskripsi' => 'required',
+            'manfaat' => 'required',
         ]);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
@@ -61,16 +59,16 @@ class TentangController extends Controller
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
-            $path = 'landingpage/tentang/'.$filename;
+            $path = 'landingpage/manfaat/'.$filename;
             Storage::disk('local')->put($path , file_get_contents($image));
         }
 
-        $about = About::create([
+        $manfaat = Manfaat::create([
             // 'id' => $about->id,
             'judul' => $request->judul,
             'subjudul' => $request->subjudul,
-            'deskripsi' => $request->deskripsi,
             'image' => $filename,
+            'manfaat' => $request->manfaat,
         ]);
 
         return response()->json([
@@ -98,7 +96,7 @@ class TentangController extends Controller
      */
     public function edit($id)
     {
-        $result = About::find($id);
+        $result = Manfaat::find($id);
     
         if ($result) {
             return response()->json(['data' => $result]);
@@ -117,16 +115,17 @@ class TentangController extends Controller
         
     public function update(Request $request, $id)
     {
-        $about = About::find($id);
+        $manfaat = Manfaat::find($id);
 
-        if (!$about) {
+        if (!$manfaat) {
             return response()->json(['message' => 'Data not found.'], 404);
         }
 
         // Mengupdate atribut-atribut
-        $about->judul = $request->judul;
-        $about->deskripsi = $request->deskripsi;
-        $about->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image;
+        $manfaat->judul = $request->judul;
+        $manfaat->subjudul = $request->subjudul;
+        $manfaat->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image;
+        $manfaat->manfaat = $request->manfaat;
 
         // Simpan perubahan
         $about->save();
@@ -146,10 +145,10 @@ class TentangController extends Controller
         
         try {
             // Find the about by ID
-            $about = About::findOrFail($id);
+            $manfaat = Manfaat::findOrFail($id);
             
             // Delete the about
-            $about->delete();
+            $manfaat->delete();
             
             DB::commit();
     
@@ -169,7 +168,7 @@ class TentangController extends Controller
 
     public function datatable(Request $request)
     {
-        $data = DB::table('about_parkirkan')
+        $data = DB::table('manfaat_parkirkan')
             ->get();
     
         return DataTables::of($data)->make();

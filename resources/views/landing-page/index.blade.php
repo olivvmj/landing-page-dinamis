@@ -12,13 +12,8 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
     <title>PARKIRKAN</title>
-    <!--
 
-Lava Landing Page
-
-https://templatemo.com/tm-540-lava-landing-page
-
--->
+<!-- Lava Landing Page https://templatemo.com/tm-540-lava-landing-page-->
 
     <!-- Additional CSS Files -->
     <link rel="stylesheet" type="text/css" href="{{ asset('template') }}/assets/css/bootstrap.min.css">
@@ -30,6 +25,14 @@ https://templatemo.com/tm-540-lava-landing-page
     <link rel="stylesheet" href="{{ asset('template') }}/assets/css/owl-carousel.css">
 
 </head>
+
+@php
+    $aboutParkirkan = App\Models\About::orderBy('id', 'desc')->first();
+    $solusiParkirkan = App\Models\Solusi::orderBy('id', 'asc')->get();
+    $manfaatParkirkan = App\Models\Manfaat::orderBy('id', 'asc')->get();
+    $fiturParkirkan = App\Models\Fitur::orderBy('id', 'asc')->get();
+    
+@endphp
 
 <body>
 
@@ -78,74 +81,99 @@ https://templatemo.com/tm-540-lava-landing-page
             <div class="container">
                 <div class="row">
                     <div class="left-content col-lg-6 rounded mx-auto d-block mt-5">
-                        <h1>APLIKASI <em>PARKIRKAN</em></h1>
-                        <p>APLIKASI PENGELOLAAN PARKIR YANG MUDAH DAN PRAKTIS.
-                            DIBUNDLING DENGAN SMART POS Z90, MEMUNGKINKAN ANDA UNTUK MELAKUKAN SEMUA KEGIATAN
-                            PERPARKIRAN HANYA DALAM GENGGAMAN.</p>
+                        <h1>{{ $aboutParkirkan->judul }} <em>{{ $aboutParkirkan->subjudul }}</em></h1>
+                        <p>{{ $aboutParkirkan->deskripsi }}</p>
                     </div>
                     <div class="left-image col-lg-5 rounded mx-auto d-block">
-                        <img src="{{ asset('template') }}/assets/images/img.png"
+                        <img src="{{ asset('storage/landingpage/tentang/' . $aboutParkirkan->image) }}"
                             class="rounded img-fluid d-block mx-auto" alt="App">
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    </div>
     <!-- ***** Welcome Area End ***** -->
 
     <!-- ***** SOLUSI START ***** -->
-    <section class="section" id="solusi">
+    {{-- <section class="section" id="solusi">
         <div class="container">
             <div class="row">
                 <div class="left-content col-lg-6">
-                    <h2>MENJADI <em>SOLUSI</em> UNTUK</h2>
-                    <h2>SISTEM PERPARKIRAN</h2>
+                    <h2>{{ $solusiParkirkan->judul }} <em> {{ $solusiParkirkan->subjudul }}</em></h2>
                 </div>
             </div>
             <div class="row">
                 <div class="left-image col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix-big"
                     data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <img src="{{ asset('template') }}/assets/images/left-image.png"
+                    <img src="{{ asset('storage/landingpage/solusi/' . $solusiParkirkan->image) }}"
                         class="rounded img-fluid d-block mx-auto" alt="App">
                 </div>
                 <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
                     <ul>
+                        @foreach ($solusiParkirkan as $item)
                         <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
                             <img src="{{ asset('template') }}/assets/images/about-icon-01.png" alt="">
                             <div class="text">
-                                <h4>OFFSTREET</h4>
-                                <p>Pengelolaan parkir dalam area/Kawasan tanpa menggunakan barrier gate.</p>
+                                <h4>{{ $item->solusi}}</h4>
+                                <p>{{ $item->desk_solusi}}</p>
                             </div>
                         </li>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.5s">
-                            <img src="{{ asset('template') }}/assets/images/about-icon-01.png" alt="">
-                            <div class="text">
-                                <h4>ONSTREET</h4>
-                                <p>Pengelolaan parkir di ruang terbuka.</p>
-                            </div>
-                        </li>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.6s">
-                            <img src="{{ asset('template') }}/assets/images/about-icon-01.png" alt="">
-                            <div class="text" style="padding-top: 20px">
-                                <p>Retribusi Parkir untuk Pemerintahan Kabupaten/Kota</p>
-                            </div>
-                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section> --}}
+
+    <section class="section" id="solusi">
+        <div class="container">
+            <div class="row">
+                <div class="left-content col-lg-6">
+                    @if ($solusiParkirkan->count() > 0)
+                        @php
+                            $firstItem = $solusiParkirkan->first();
+                        @endphp
+                        <h2>{{ $firstItem->judul }} <em> {{ $firstItem->subjudul }}</em></h2>
+                    @endif
+                </div>
+            </div>
+            <div class="row">
+                <div class="left-image col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix-big"
+                    data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                    @if ($solusiParkirkan->count() > 0)
+                        @php
+                            $firstItem = $solusiParkirkan->first();
+                        @endphp
+                        <img src="{{ asset('storage/landingpage/solusi/' . $firstItem->image) }}"
+                            class="rounded img-fluid d-block mx-auto" alt="App">
+                    @endif
+                </div>
+                <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
+                    <ul>
+                        @foreach ($solusiParkirkan as $item)
+                            <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
+                                <img src="{{ asset('template') }}/assets/images/about-icon-01.png" alt="">
+                                <div class="text">
+                                    <h4>{{ $item->solusi }}</h4>
+                                    <p>{{ $item->desk_solusi }}</p>
+                                </div>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- ***** SOLUSI END ***** -->
 
 
     <!-- ***** MANFAAT START ***** -->
-    <section class="section mt-5" id="manfaat">
+    {{-- <section class="section mt-5" id="manfaat">
         <div class="container">
             <div class="row">
                 <div class="left-content col-lg-6">
-                    <h2>APA <em>MANFAATNYA</em> UNTUK</h2>
-                    <h2>PENGELOLA PARKIR?</h2>
+                    <h2><em>MANFAAT</em> UNTUK PENGELOLA PARKIR</h2>
                 </div>
             </div>
 
@@ -187,6 +215,44 @@ https://templatemo.com/tm-540-lava-landing-page
                 </div>
             </div>
         </div>
+    </section> --}}
+    <section class="section mt-5" id="manfaat">
+        <div class="container">
+            <div class="row">
+                <div class="left-content col-lg-6">
+                    @if ($manfaatParkirkan->count() > 0)
+                        @php
+                            $firstItem = $manfaatParkirkan->first();
+                        @endphp
+                        <h2>APA <em>{{ $firstItem->judul }}</em> {{ $firstItem->subjudul }} </h2>
+                    @endif
+                </div>
+            </div>
+            <div class="row">
+                <div class="left-image col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix-big"
+                    data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                    @if ($manfaatParkirkan->count() > 0)
+                        @php
+                            $firstItem = $manfaatParkirkan->first();
+                        @endphp
+                        <img src="{{ asset('storage/landingpage/manfaat/' . $firstItem->image) }}"
+                            class="rounded img-fluid d-block mx-auto" alt="App">
+                    @endif
+                </div>
+                <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
+                    <ul>
+                        @foreach ($manfaatParkirkan as $item)
+                            <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
+                                <img src="{{ asset('template') }}/assets/images/icon1.png" alt="">
+                                <div class="text">
+                                    <p class="mt-2">{{ $item->manfaat }}</p>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- ***** MANFAAT END ***** -->
 
@@ -195,106 +261,26 @@ https://templatemo.com/tm-540-lava-landing-page
         <div class="container">
             <div class="row">
                 <div class="left-content rounded mx-auto d-block mt-5 mb-5">
-                    <h2>FITUR - FITUR DI <em>PARKIRKAN</em></h2>
+                    @if ($fiturParkirkan->count() > 0)
+                        @php
+                            $firstItem = $fiturParkirkan->first();
+                        @endphp
+                        <h2>{{ $firstItem->judul }} <em>{{ $firstItem->subjudul }}</em></h2>
+                    @endif
                 </div>
             </div>
             <div class="row mb-5">
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
+                @foreach ($fiturParkirkan as $item)
+                    <div class="col-lg-3 mb-5" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                        <div class="features-item">
+                            <div class="features-icon">
+                                <img src="{{ asset('storage/landingpage/fitur/' . $item->image) }}">
+                                <h4>{{ $item->fitur }}</h4>
+                                <p>{{ $item->desk_fitur }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 mb-3" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <div class="features-item">
-                        <div class="features-icon">
-                            <img src="{{ asset('template') }}/assets/images/pengaturan_tarif.png" alt="">
-                            <h4>Pengaturan Tarif</h4>
-                            <p>Anda bisa melakukan pengaturan tarif yang beragam, Bisa diatur sesuai kebutuhan Anda.</p>
-                            {{-- <a href="#testimonials" class="main-button">
-                                Read More
-                            </a> --}}
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -308,7 +294,8 @@ https://templatemo.com/tm-540-lava-landing-page
                     <div class="row">
                         <div class="right-content text-center">
                             <h2>HUBUNGI KAMI</h2>
-                            <p class="mb-5">Kantor : Jl. Krekot Bunder Raya No.26, RW.6, Ps. Baru, Kecamatan Sawah Besar, Kota
+                            <p class="mb-5">Kantor : Jl. Krekot Bunder Raya No.26, RW.6, Ps. Baru, Kecamatan Sawah
+                                Besar, Kota
                                 Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10710</p>
                             <div class="embed-responsive embed-responsive-16by9">
                                 <iframe
@@ -368,6 +355,3 @@ https://templatemo.com/tm-540-lava-landing-page
 </body>
 
 </html>
-
-
-{{-- <a href="#about" class="main-button-slider"><i class="fa fa-whatsapp"></i> HUBUNGI KAMI</a> --}}
