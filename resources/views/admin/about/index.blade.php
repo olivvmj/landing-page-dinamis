@@ -193,7 +193,7 @@
                 targets: 4,
                 render: function(data, type, full, meta) {
                     var imagePath = full.image;
-                    var imageUrl = imagePath ? "{{ url('storage/landingpage/') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
+                    var imageUrl = imagePath ? "{{ url('storage/landingpage/tentang/') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
                     return `<img class="img-thumbnail wd-50p wd-sm-100" src="${imageUrl}">`;
                 }
             },
