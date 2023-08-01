@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\About;
+use App\Models\Solusi;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,22 +12,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class TentangController extends Controller
+class SolusiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data["about"] = About::all();
+        $data["solusi"] = Solusi::all();
         
-        return view('admin.about.index', $data);
+        return view('admin.solusi.index', $data);
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -36,17 +34,13 @@ class TentangController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-
     public function store(Request $request)
     {
         $validatedData = Validator::make($request->all(),[
             'judul' => 'required',
             'subjudul' => 'required',
-            'deskripsi' => 'required',
+            'desk_solusi' => 'required'
         ]);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
@@ -61,16 +55,17 @@ class TentangController extends Controller
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
-            $path = 'landingpage/tentang/'.$filename;
+            $path = 'landingpage/solusi/'.$filename;
             Storage::disk('local')->put($path , file_get_contents($image));
         }
 
-        $about = About::create([
+        $solusi = Solusi::create([
             // 'id' => $about->id,
             'judul' => $request->judul,
             'subjudul' => $request->subjudul,
-            'deskripsi' => $request->deskripsi,
             'image' => $filename,
+            'solusi'=> $request->solusi,
+            'desk_solusi' => $request->desk_solusi
         ]);
 
         return response()->json([
@@ -81,9 +76,6 @@ class TentangController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -92,13 +84,10 @@ class TentangController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $result = About::find($id);
+        $result = Solusi::find($id);
     
         if ($result) {
             return response()->json(['data' => $result]);
@@ -109,36 +98,28 @@ class TentangController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-        
     public function update(Request $request, $id)
     {
-        $about = About::find($id);
+        $solusi = Solusi::find($id);
 
-        if (!$about) {
+        if (!$solusi) {
             return response()->json(['message' => 'Data not found.'], 404);
         }
 
         // Mengupdate atribut-atribut
-        $about->judul = $request->judul;
-        $about->deskripsi = $request->deskripsi;
-        $about->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image;
+        $solusi->judul = $request->judul;
+        $solusi->subjudul = $request->subjudul;
+        $solusi->image = $request->hasFile('image') ? $request->file('image')->store('solusi') : $solusi->image;
+        $solusi->solusi = $request->solusi;
+        $solusi->desk_solusi = $request->desk_solusi;
 
         // Simpan perubahan
         $about->save();
-
     }
-
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -146,10 +127,10 @@ class TentangController extends Controller
         
         try {
             // Find the about by ID
-            $about = About::findOrFail($id);
+            $solusi = Solusi::findOrFail($id);
             
             // Delete the about
-            $about->delete();
+            $solusi->delete();
             
             DB::commit();
     
@@ -169,11 +150,9 @@ class TentangController extends Controller
 
     public function datatable(Request $request)
     {
-        $data = DB::table('about_parkirkan')
+        $data = DB::table('solusi_parkirkan')
             ->get();
     
         return DataTables::of($data)->make();
     }
-    
-    
 }

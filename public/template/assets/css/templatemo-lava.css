@@ -1230,7 +1230,7 @@ manfaat
 
 #manfaat .right-text ul li {
   display: inline-block;
-  margin-bottom: 60px;
+  margin-bottom: 35px;
 }
 
 #manfaat .right-text ul li:last-child {
@@ -1238,6 +1238,7 @@ manfaat
 }
 
 #manfaat .right-text img {
+  max-width: 65px;
   display: inline-block;
   float: left;
   margin-right: 30px;

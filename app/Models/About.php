@@ -16,6 +16,7 @@ class About extends Authenticatable
     protected $table = 'about_parkirkan';
     protected $fillable = [
         'judul',
+        'subjudul',
         'deskripsi',
         'image'
     ];

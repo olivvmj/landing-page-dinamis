@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\About;
+use App\Models\Fitur;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,16 +12,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class TentangController extends Controller
+class FiturController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data["about"] = About::all();
+        $data["fitur"] = Fitur::all();
         
-        return view('admin.about.index', $data);
+        return view('admin.fitur.index', $data);
     }
 
     /**
@@ -46,7 +46,8 @@ class TentangController extends Controller
         $validatedData = Validator::make($request->all(),[
             'judul' => 'required',
             'subjudul' => 'required',
-            'deskripsi' => 'required',
+            'fitur' => 'required',
+            'desk_fitur' => 'required',
         ]);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
@@ -61,16 +62,17 @@ class TentangController extends Controller
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
-            $path = 'landingpage/tentang/'.$filename;
+            $path = 'landingpage/fitur/'.$filename;
             Storage::disk('local')->put($path , file_get_contents($image));
         }
 
-        $about = About::create([
+        $fitur = Fitur::create([
             // 'id' => $about->id,
             'judul' => $request->judul,
             'subjudul' => $request->subjudul,
-            'deskripsi' => $request->deskripsi,
             'image' => $filename,
+            'fitur' => $request->fitur,
+            'desk_fitur' => $request->desk_fitur,
         ]);
 
         return response()->json([
@@ -98,7 +100,7 @@ class TentangController extends Controller
      */
     public function edit($id)
     {
-        $result = About::find($id);
+        $result = Fitur::find($id);
     
         if ($result) {
             return response()->json(['data' => $result]);
@@ -117,19 +119,20 @@ class TentangController extends Controller
         
     public function update(Request $request, $id)
     {
-        $about = About::find($id);
+        $fitur = Fitur::find($id);
 
-        if (!$about) {
+        if (!$fitur) {
             return response()->json(['message' => 'Data not found.'], 404);
         }
 
         // Mengupdate atribut-atribut
-        $about->judul = $request->judul;
-        $about->deskripsi = $request->deskripsi;
-        $about->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image;
+        $fitur->judul = $request->judul;
+        $fitur->subjudul = $request->subjudul;
+        $fitur->image = $request->hasFile('image') ? $request->file('image')->store('fitur') : $fitur->image;
+        $fitur->fitur = $request->fitur;
 
         // Simpan perubahan
-        $about->save();
+        $fitur->save();
 
     }
 
@@ -146,10 +149,10 @@ class TentangController extends Controller
         
         try {
             // Find the about by ID
-            $about = About::findOrFail($id);
+            $fitur = Fitur::findOrFail($id);
             
             // Delete the about
-            $about->delete();
+            $fitur->delete();
             
             DB::commit();
     
@@ -169,7 +172,7 @@ class TentangController extends Controller
 
     public function datatable(Request $request)
     {
-        $data = DB::table('about_parkirkan')
+        $data = DB::table('fitur_parkirkan')
             ->get();
     
         return DataTables::of($data)->make();

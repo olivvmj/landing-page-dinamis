@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('about_parkirkan', function (Blueprint $table) {
+        Schema::create('fitur_parkirkan', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
             $table->string('subjudul');
-            $table->string('deskripsi');
             $table->string('image');
+            $table->string('fitur');
+            $table->string('desk_fitur');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pemilik');
+        Schema::dropIfExists('fitur_parkirkan');
     }
 };
