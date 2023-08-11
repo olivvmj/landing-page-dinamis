@@ -1,9 +1,22 @@
+@extends("admin.layouts.main")
+
+@section("title_content", "Kelola Akun Admin")
+
+@section("page_title" , "Profile Admin")
+
+@section("breadcrumb")
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        Home
+    </li>
+    <li class="breadcrumb-item active">
+        Kelola Akun Admin
+    </li>
+</ol>
+@endsection
+
+@section('content')
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -27,3 +40,4 @@
         </div>
     </div>
 </x-app-layout>
+@endsection

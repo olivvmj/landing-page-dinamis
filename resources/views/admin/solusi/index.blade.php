@@ -192,7 +192,7 @@
                 targets: 3,
                 render: function(data, type, full, meta) {
                     var imagePath = full.image;
-                    var imageUrl = imagePath ? "{{ url('storage/landingpage/solusi') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
+                    var imageUrl = imagePath ? "{{ url('storage/landingpage/solusi') }}/" + imagePath : "{{ asset('template') }}/assets/images/left-image.png";
                     return `<img class="img-thumbnail wd-50p wd-sm-100" src="${imageUrl}">`;
                 }
             },
@@ -283,8 +283,6 @@
             $('.modal-title').text('Edit Data solusi');
             $('#judul').val(data.solusi.judul);
             $('#subjudul').val(data.solusi.subjudul);
-            $('#solusi').val(data.solusi); 
-            $('#desk_solusi').val(data.desk_solusi); 
             // Tampilkan gambar lama jika ada
             var imageName = data.solusi.image;
             if (imageName) {
@@ -293,6 +291,8 @@
             } else {
                 $('#image').attr('src', "{{ asset('admin/assets/img/default_gambar.png') }}");
             }
+            $('#solusi').val(data.solusi); 
+            $('#desk_solusi').val(data.desk_solusi); 
             
         });
         

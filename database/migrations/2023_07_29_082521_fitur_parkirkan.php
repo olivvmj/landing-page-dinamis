@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('fitur_parkirkan', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->string('subjudul');
-            $table->string('image');
+            $table->string('judul')->nullable();
+            $table->string('subjudul')->nullable();
+            $table->string('image')->nullable();
             $table->string('fitur');
             $table->string('desk_fitur');
             $table->timestamps();
