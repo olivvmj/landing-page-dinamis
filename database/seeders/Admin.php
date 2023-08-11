@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class Admin extends Seeder
 {
@@ -14,7 +15,6 @@ class Admin extends Seeder
     public function run(): void
     {
         $item = [
-            'id' => '',
             'name' => 'Admin Parkirkan',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('password'),
