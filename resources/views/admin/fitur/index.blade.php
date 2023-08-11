@@ -192,7 +192,7 @@
                 targets: 3,
                 render: function(data, type, full, meta) {
                     var imagePath = full.image;
-                    var imageUrl = imagePath ? "{{ url('storage/landingpage/fitur/') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
+                    var imageUrl = imagePath ? "{{ url('storage/landingpage/fitur/') }}/" + imagePath : "{{ asset('template') }}/assets/images/pengaturan_tarif.png";
                     return `<img class="img-thumbnail wd-50p wd-sm-100" src="${imageUrl}">`;
                 }
             },

@@ -46,18 +46,4 @@
             <span>Profil</span>
         </a>
     </li><!-- End Profile Page Nav -->
-    
-    {{-- <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
-            <i class="bi bi-gear"></i>
-            <span>Setting</span>
-        </a>
-    </li><!-- End Setting Page Nav --> --}}
-
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="/bantuan">
-            <i class="bi bi-question-circle"></i>
-            <span>Bantuan?</span>
-        </a>
-    </li>
 </ul>

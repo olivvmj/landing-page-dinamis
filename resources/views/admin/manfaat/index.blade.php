@@ -184,7 +184,7 @@
                 targets: 3,
                 render: function(data, type, full, meta) {
                     var imagePath = full.image;
-                    var imageUrl = imagePath ? "{{ url('/storage/landingpage/manfaat/') }}/" + imagePath : "/admin/assets/img/default_gambar.png";
+                    var imageUrl = imagePath ? "{{ url('/storage/landingpage/manfaat/') }}/" + imagePath : "{{ asset('template') }}/assets/images/manfaat.png";
                     return `<img class="img-thumbnail wd-50p wd-sm-100" src="${imageUrl}">`;
                 }
             },

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('manfaat_parkirkan', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->string('subjudul');
+            $table->string('judul')->nullable();
+            $table->string('subjudul')->nullable();
             $table->string('image');
             $table->string('manfaat');
             $table->timestamps();
