@@ -8,6 +8,12 @@
 - php artisan db:seed
 - php artisan serve
 
+## Open Admin side [Regist]
+- php artisan serve
+- type on search bar : /register
+- input data admin
+- save
+
 ## Open Admin side [login]
 - php artisan serve
 - type on search bar : /dashboard
