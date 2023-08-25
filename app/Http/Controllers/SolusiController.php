@@ -26,6 +26,8 @@ class SolusiController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -34,13 +36,19 @@ class SolusiController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+
+    public function store(Request $request){
+
         $validatedData = Validator::make($request->all(),[
             'judul' => 'required',
             'subjudul' => 'required',
-            'desk_solusi' => 'required'
+            'image' => 'required|image|mimes:jpg,png,jpeg',
+            'solusi' => 'required',
+            'desk_solusi' => 'required',
         ]);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
@@ -50,8 +58,19 @@ class SolusiController extends Controller
             'message' => $validatedData->errors()->first(),
         ], 200);
 
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+        //     $path = 'landingpage/tentang/';
+        //     $nameFile = md5($image->getClientOriginalName() . rand(rand(231, 992), 123882)) . "." . $image->getClientOriginalExtension();
+        //     Storage::disk('local')->put($path . $nameFile, file_get_contents($image));
+        //     $imagePath = $path . $nameFile;
+        // } else {
+        //     $imagePath = '';
+        // }
+        
+
         if ($request->hasfile("image"))
-        {
+        {    
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
@@ -60,12 +79,12 @@ class SolusiController extends Controller
         }
 
         $solusi = Solusi::create([
-            // 'id' => $about->id,
+            // 'id' => $solusi->id,
             'judul' => $request->judul,
             'subjudul' => $request->subjudul,
             'image' => $filename,
-            'solusi'=> $request->solusi,
-            'desk_solusi' => $request->desk_solusi
+            'solusi' => $request->solusi,
+            'desk_solusi' => $request->desk_solusi,
         ]);
 
         return response()->json([
@@ -76,6 +95,9 @@ class SolusiController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -84,6 +106,9 @@ class SolusiController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -98,28 +123,76 @@ class SolusiController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
+        
     public function update(Request $request, $id)
     {
+        // $Parkir = Solusi::where("id", $id)->update([
+            
+        //     $solusi->judul = $request->judul,
+        //     $solusi->subjudul = $request->subjudul,
+        //     $solusi->deskripsi = $request->deskripsi,
+        //     $solusi->image = $request->hasFile('image') ? $request->file('image')->store('about') : $solusi->image,
+        // ]);
+
+        // return response()->json([
+        //     'status' => true,
+        //     'message' => 'Data berhasil dirubah'
+        // ]);
+
         $solusi = Solusi::find($id);
 
-        if (!$solusi) {
-            return response()->json(['message' => 'Data not found.'], 404);
-        }
+    $validatedData = Validator::make($request->all(), [
+        'judul' => 'required',
+        'subjudul' => 'required',
+        'image' => 'image|mimes:jpg,png,jpeg',
+        'solusi' => 'required',
+        'desk_solusi' => 'required',
+    ]);
 
-        // Mengupdate atribut-atribut
-        $solusi->judul = $request->judul;
-        $solusi->subjudul = $request->subjudul;
-        $solusi->image = $request->hasFile('image') ? $request->file('image')->store('solusi') : $solusi->image;
-        $solusi->solusi = $request->solusi;
-        $solusi->desk_solusi = $request->desk_solusi;
-
-        // Simpan perubahan
-        $about->save();
+    if ($validatedData->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => $validatedData->errors()->first(),
+        ], 200);
     }
+
+    if ($request->hasFile("image")) {
+        $image = $request->file('image');
+        $extension = $image->getClientOriginalExtension();
+        $filename = Carbon::now()->format('YmdHis').'.'.$extension;
+        $path = 'landingpage/solusi/'.$filename;
+        Storage::disk('local')->put($path, file_get_contents($image));
+
+        if ($solusi->image && file_exists($solusi->image)) {
+            unlink($solusi->image);
+        }
+        $solusi->image = $filename;
+    }
+
+    $solusi->judul = $request->judul;
+    $solusi->subjudul = $request->subjudul;
+    $solusi->solusi = $request->solusi;
+    $solusi->desk_solusi = $request->desk_solusi;
+    $solusi->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Data berhasil dirubah'
+    ]);
+
+    }
+
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -155,4 +228,6 @@ class SolusiController extends Controller
     
         return DataTables::of($data)->make();
     }
+    
+    
 }

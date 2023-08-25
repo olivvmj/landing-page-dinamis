@@ -50,20 +50,7 @@
                         <ul class="nav">
                             <li><a href="#welcome" class="menu-item">Tentang</a></li>
                             <li><a href="#manfaat" class="menu-item">Manfaat</a></li>
-                            </li>
-                            <li class="submenu">
-                                <a href="javascript:;">Fitur</a>
-                                <ul>
-                                    <li><a href="" class="menu-item">Scan Plat Nomor Kendaraan</a></li>
-                                    <li><a href="" class="menu-item">Slot Penitipan Barang</a></li>
-                                    <li><a href="" class="menu-item">Cetak Tiket Parkir dengan QR Code</a></li>
-                                    <li><a href="" class="menu-item">Metode Pembayaran Non Tunai</a></li>
-                                    <li><a href="" class="menu-item">Pengaturan Umum Parkiran</a></li>
-                                    <li><a href="" class="menu-item">Pengaturan Petugas Parkir</a></li>
-                                    <li><a href="" class="menu-item">Pengaturan Tarif</a></li>
-                                    <li><a href="" class="menu-item">Laporan</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="#fitur" class="menu-item">Fitur</a></li>
                             <li><a href="#kontak" class="menu-item">Kontak</a></li>
                         </ul>
                         <!-- ***** Menu End ***** -->
