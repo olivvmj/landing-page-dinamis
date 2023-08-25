@@ -7,10 +7,10 @@
 @section('breadcrumb')
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            Home
+            @yield('title_content')
         </li>
         <li class="breadcrumb-item active">
-            Kelola Landing Page
+            @yield('page_title')
         </li>
     </ol>
 @endsection
@@ -39,7 +39,7 @@
                                         <th>Judul</th>
                                         <th>Sub-Judul</th>
                                         <th>Deskripsi Aplikasi</th>
-                                        <th style="width: 1%">Image</th>
+                                        <th style="width: 1%">Gambar</th>
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -79,7 +79,7 @@
                                         <div class="form-group">
                                             <div class="mb-3">
                                                 <input type="hidden" id="id" name="id">
-                                                <label for="subjudul" class="form-label">Sub subJudul</label>
+                                                <label for="subjudul" class="form-label">Sub Judul</label>
                                                 <input type="text" name="subjudul" class="form-control" id="subjudul"
                                                     value="{{ old('subjudul') }}">
                                             </div>
@@ -97,9 +97,9 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
-                                                <label for="image" class="form-label">Image</label>
-                                                <input type="file" id="image" class="dropify" name="image"
-                                                    data-height="150">
+                                                <label for="image" class="form-label">Gambar</label>
+                                                {{-- <input type="file" id="image" class="dropify" name="image" accept=".png, .jpg, .jpeg" --}}
+                                                <input id="image" class="dropify" type="file" name="image" data-default-file="" data-allowed-file-extensions="jpeg jpg png" accept=".png, .jpg, .jpeg">
                                             </div>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="reset" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
                             <button id="btnSave" class="btn btn-primary">Simpan</button>
                         </div>
                     </div>
@@ -133,6 +133,20 @@
 
     <!-- INTERNAL Summernote Editor js -->
     <script>
+        $(document).ready(function() {
+            // Inisialisasi Dropify dengan bahasa Indonesia
+            $('.dropify').dropify({
+                messages: {
+                    default: 'Seret dan lepas berkas di sini atau klik',
+                    replace: 'Seret dan lepas atau klik untuk mengganti',
+                    remove: 'Hapus',
+                    error: 'Oops, terjadi kesalahan.'
+                }
+            });
+        });
+    </script>
+
+    <script>
         function previewImage() {
             const image = document.querySelector("#image");
             const imgPreview = document.querySelector(".image-preview");
@@ -155,6 +169,9 @@
             // Contoh Inisiator datatable severside
             table = $("#datatable").DataTable({
                 responsive: true,
+                searching: false,
+                paging: false,
+                info: false,
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
@@ -224,11 +241,13 @@
                             }
 
                             return `<img class="img-thumbnail wd-50p wd-sm-100" src="${imageUrl}">`;
+                            // return data  = `<img class="img-thumbnail wd-50p wd-sm-100" src="{{ asset('') }}${data}">`;
                         }
                     },
                     {
                         targets: -1,
                         render: function(data, type, full, meta) {
+                            // console.log(data);
                             return `
                                 <div class="btn-list">
                                     <a href="javascript:void(0)" onclick="edit('${data}')" class="btn btn-sm btn-primary modal-effect btn-edit" data-bs-effect="effect-super-scaled"><i class="bi bi-pencil"></i></a>
@@ -242,18 +261,33 @@
                         },
                     },
                 ],
-                columns: [
-                    {data: null},
-                    {data: 'judul'},
-                    {data: 'subjudul'},
-                    {data: 'deskripsi'},
-                    {data: 'image'},
-                    {data: 'id'},
+                columns: [{
+                        data: null
+                    },
+                    {
+                        data: 'judul'
+                    },
+                    {
+                        data: 'subjudul'
+                    },
+                    {
+                        data: 'deskripsi'
+                    },
+                    {
+                        data: 'image'
+                    },
+                    {
+                        data: 'id'
+                    },
                 ]
             });
 
 
-            $('#form').on('submit', function(e) {
+            $('#btnSave').on('click', function () {
+                submit();
+            })
+            
+            $('#form').on('submit', function(e){
                 e.preventDefault();
 
                 submit();
@@ -263,49 +297,160 @@
 
         function create() {
             submit_method = 'create';
-
+            var df = '';
             $('#id').val('');
             $('#form')[0].reset();
+            df = $('#image').dropify();
 
+            
+            // $('.dropify').dropify();
+            df = df.data('dropify');
+            df.resetPreview();
+            df.clearElement();
             $('#modal_form').modal('show');
-
-            $('.dropify').dropify();
             $('.modal-title').text('Tambah Data Tentang Parkirkan');
-            $('#btnSave').on('click', function() {
-                submit();
-            })
+            // $('#btnSave').on('click', function() {
+            //     submit();
+            // })
         }
 
         function edit(id) {
             submit_method = 'edit';
+            var df = "";
+            df = $('#image').dropify();
+            
+            $('#form')[0].reset();
+
             var url = "{{ route('kelola-tentang.edit', ':id') }}";
             url = url.replace(':id', id);
-
+            
             $.get(url, function(response) {
+                
                 var data = response.data;
-                console.log(data);
+
+                // console.log(data.image);
 
                 $('#id').val(data.id);
+
                 $('#modal_form').modal('show');
-                $('.dropify').dropify();
                 $('.modal-title').text('Edit Data About');
-                $('#judul').val(data.about.judul);
-                $('#subjudul').val(data.about.subjudul);
+                // $('.dropify').dropify();
+                $('#judul').val(data.judul);
+                $('#subjudul').val(data.subjudul);
                 $('#deskripsi').val(data.deskripsi);
+
+                // var imageName = data.about.image;
+
+                df = df.data('dropify');
+                df.resetPreview();
+                df.clearElement();
+                df.settings.defaultFile = `{{ asset('storage/landingpage/tentang') }}/`+data.image;
+                df.destroy();
+                df.init();
                 // Tampilkan gambar lama jika ada
-                var imageName = data.about.image;
-                if (imageName) {
-                    var imageUrl = "{{ url('storage') }}/" + imageName;
-                    $('#image').attr('src', imageUrl);
-                } else {
-                    $('#image').attr('src', "{{ asset('admin/assets/img/default_gambar.png') }}");
-                }
+                // if (imageName) {
+                //     var imageUrl = "{{ url('storage') }}/" + imageName;
+                //     $('#image').attr('src', imageUrl);
+                // } else {
+                //     $('#image').attr('src', "{{ asset('admin/assets/img/default_gambar.png') }}");
+                // }
 
             });
+        }
+        
+        function submit() {
+            var id = $('#id').val();
+            var form = $('#form')[0];
+            var formData = new FormData(form);
+        
 
-            $('#btnSave').on('click', function() {
-                submit();
-            })
+            var judul = $('#judul').val();
+            var subjudul = $('#subjudul').val();
+            var deskripsi = $('#deskripsi').val();
+            // var image = $('#image').prop('files')[0];
+            var image = $('#image')[0].files[0];
+            // var submit_method = '';
+            // console.log(judul);            
+            var url = "{{ route('kelola-tentang.store') }}";
+
+            $('#btnSave').text('Menyimpan...');
+            $('#btnSave').attr('disabled', true);
+            
+            if (submit_method == 'edit') {
+                // formData.append('judul', judul);
+                // formData.append('subjudul', subjudul);
+                // formData.append('deskripsi', deskripsi);
+                // var url = "{{ route('kelola-tentang.store') }}";
+                var url = "{{ route('kelola-tentang.update', ':id') }}";
+                url = url.replace(':id', id);
+                formData.append('_method', 'PUT');
+            }                
+            // } else if (submit_method === 'edit') {
+            //     var url = "{{ route('kelola-tentang.update', ':id') }}";
+            //     url = url.replace(':id', id);
+            //     formData.append('_method', 'PUT');
+            // }
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData, 
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    console.log(data);
+                    if (data.status) {
+                        var about = data.about;
+                        console.log("About:", about);
+                        $('#modal_form').modal('hide');
+                        Swal.fire({
+                            toast: false,
+                            icon: 'success',
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        table.ajax.reload();
+
+                        $('#btnSave').text('Simpan');
+                        $('#btnSave').attr('disabled', false);
+                    } else {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                    resetForm();
+                },
+                error: function(data) {
+                    var error_message = Object.values(data.responseJSON.errors).join(' ');
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: error_message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    resetForm();
+                },
+                complete: function() {
+                    $('#btnSave').text('Simpan');
+                    $('#btnSave').attr('disabled', false);
+                }
+            });
         }
 
         function destroy(id) {
@@ -314,7 +459,7 @@
 
             Swal.fire({
                 title: "Yakin ingin menghapus data ini?",
-                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersbut!",
+                text: "Ketika data terhapus, anda tidak bisa mengembalikan data tersebut!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -346,105 +491,10 @@
             })
         }
 
-        function submit() {
-            var id = $('#id').val();
-            var form = $('#form')[0];
-            var judul = $('#judul').val();
-            var subjudul = $('#subjudul').val();
-            var deskripsi = $('#deskripsi').val();
-            var image = $('#image').prop('files')[0];
 
-            console.log("ID:", id);
-            console.log("Judul Section:", judul);
-            console.log("Sub Judul Section:", subjudul);
-            console.log("Deskripsi Aplikasi:", deskripsi);
-            console.log("Image:", image);
-
-            var formData = new FormData(form);
-            formData.append('judul', judul);
-            formData.append('subjudul', subjudul);
-            formData.append('deskripsi', deskripsi);
-
-            console.log("FormData:", formData);
-
-            var url = "";
-
-            if (submit_method === 'create') {
-                url = "{{ route('kelola-tentang.store') }}";
-            } else if (submit_method === 'edit') {
-                url = "{{ route('kelola-tentang.update', ':id') }}";
-                url = url.replace(':id', id);
-                formData.append('_method', 'PUT');
-            }
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function(data) {
-                    console.log(data);
-                    if (data.status) {
-                        var about = data.about;
-                        console.log("About:", about);
-                        $('#modal_form').modal('hide');
-                        Swal.fire({
-                            toast: false,
-                            icon: 'success',
-                            title: data.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        table.ajax.reload();
-
-                        $('#btnSave').text('Simpan');
-                        $('#btnSave').attr('disabled', false);
-                    } else {
-                        // for (var i = 0; i < data.inputerror.length; i++) {
-                        //     $('[name="' + data.inputerror[i] + '"]').parent().parent().addClass('has-error');
-                        //     $('[name="' + data.inputerror[i] + '"]').next().text(data.error_string[i]);
-                        // }
-
-                        Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'error',
-                            title: 'ERROR!',
-                            text: data.message,
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-
-                        $('#btnSave').text('Simpan');
-                        $('#btnSave').attr('disabled', false);
-                    }
-                },
-                error: function(data) {
-                    var error_message = "";
-
-                    $.each(data.responseJSON.errors, function(key, value) {
-                        error_message += value + " ";
-                    });
-
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'ERROR!',
-                        text: error_message,
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-
-                    $('#btnSave').text('Simpan');
-                    $('#btnSave').attr('disabled', false);
-                },
-            });
+        function resetForm() {
+            $('#form')[0].reset();
+            $('#image').val('');
         }
     </script>
 @endsection

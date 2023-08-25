@@ -41,11 +41,12 @@ class FiturController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
         $validatedData = Validator::make($request->all(),[
             'judul' => 'required',
             'subjudul' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg',
             'fitur' => 'required',
             'desk_fitur' => 'required',
         ]);
@@ -57,8 +58,19 @@ class FiturController extends Controller
             'message' => $validatedData->errors()->first(),
         ], 200);
 
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+        //     $path = 'landingpage/tentang/';
+        //     $nameFile = md5($image->getClientOriginalName() . rand(rand(231, 992), 123882)) . "." . $image->getClientOriginalExtension();
+        //     Storage::disk('local')->put($path . $nameFile, file_get_contents($image));
+        //     $imagePath = $path . $nameFile;
+        // } else {
+        //     $imagePath = '';
+        // }
+        
+
         if ($request->hasfile("image"))
-        {
+        {    
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
@@ -67,7 +79,7 @@ class FiturController extends Controller
         }
 
         $fitur = Fitur::create([
-            // 'id' => $about->id,
+            // 'id' => $fitur->id,
             'judul' => $request->judul,
             'subjudul' => $request->subjudul,
             'image' => $filename,
@@ -119,20 +131,59 @@ class FiturController extends Controller
         
     public function update(Request $request, $id)
     {
+        // $Parkir = Fitur::where("id", $id)->update([
+            
+        //     $fitur->judul = $request->judul,
+        //     $fitur->subjudul = $request->subjudul,
+        //     $fitur->deskripsi = $request->deskripsi,
+        //     $fitur->image = $request->hasFile('image') ? $request->file('image')->store('about') : $fitur->image,
+        // ]);
+
+        // return response()->json([
+        //     'status' => true,
+        //     'message' => 'Data berhasil dirubah'
+        // ]);
+
         $fitur = Fitur::find($id);
 
-        if (!$fitur) {
-            return response()->json(['message' => 'Data not found.'], 404);
+    $validatedData = Validator::make($request->all(), [
+        'judul' => 'required',
+        'subjudul' => 'required',
+        'image' => 'image|mimes:jpg,png,jpeg',
+        'fitur' => 'required',
+        'desk_fitur' => 'required',
+    ]);
+
+    if ($validatedData->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => $validatedData->errors()->first(),
+        ], 200);
+    }
+
+    if ($request->hasFile("image")) {
+        $image = $request->file('image');
+        $extension = $image->getClientOriginalExtension();
+        $filename = Carbon::now()->format('YmdHis').'.'.$extension;
+        $path = 'landingpage/fitur/'.$filename;
+        Storage::disk('local')->put($path, file_get_contents($image));
+
+        if ($fitur->image && file_exists($fitur->image)) {
+            unlink($fitur->image);
         }
+        $fitur->image = $filename;
+    }
 
-        // Mengupdate atribut-atribut
-        $fitur->judul = $request->judul;
-        $fitur->subjudul = $request->subjudul;
-        $fitur->image = $request->hasFile('image') ? $request->file('image')->store('fitur') : $fitur->image;
-        $fitur->fitur = $request->fitur;
+    $fitur->judul = $request->judul;
+    $fitur->subjudul = $request->subjudul;
+    $fitur->fitur = $request->fitur;
+    $fitur->desk_fitur = $request->desk_fitur;
+    $fitur->save();
 
-        // Simpan perubahan
-        $fitur->save();
+    return response()->json([
+        'status' => true,
+        'message' => 'Data berhasil dirubah'
+    ]);
 
     }
 

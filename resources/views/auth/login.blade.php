@@ -406,6 +406,8 @@
 </style>
 
 <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
 <x-guest-layout>
     <!-- Session Status -->
@@ -458,13 +460,14 @@
         @csrf
 
         <!-- Email Address -->
-        <h2 class="title">Sign in</h2>
+        <h2 class="title">Halo Admin!</h2>
         <div class="input-field">
             <i class="fas fa-user"></i>
             {{-- <x-input-label for="email" :value="__('Email')" /> --}}
             <input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
                 autofocus autocomplete="username" placeholder="Email" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            {{-- <x-input-error :messages="$errors->get('email')" class="mt-2" /> --}}
+
         </div>
 
         <!-- Password -->
@@ -473,9 +476,9 @@
             {{-- <x-input-label for="password" :value="__('Password')" /> --}}
 
             <input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="current-password" placeholder="Username" />
+                autocomplete="current-password" placeholder="Kata Sandi" />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            {{-- <x-input-error :messages="$errors->get('password')" class="mt-2" /> --}}
         </div>
 
         <!-- Remember Me -->
@@ -483,20 +486,36 @@
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ml-2 text-sm text-gray-600">{{ __('Ingat saya') }}</span>
             </label>
         </div>
 
-        <div class="flex items-center mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+        @if ($errors->has('email'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ $errors->first('email') }}',
+                });
+            </script>
+        @endif
 
+        @if ($errors->has('password'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ $errors->first('password') }}',
+                });
+            </script>
+        @endif
+
+
+
+
+        <div class="flex items-center mt-4">
             <button class="btn solid">
-                {{ __('Log in') }}
+                {{ __('masuk') }}
             </button>
         </div>
     </form>

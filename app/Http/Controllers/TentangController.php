@@ -41,13 +41,16 @@ class TentangController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
         $validatedData = Validator::make($request->all(),[
             'judul' => 'required',
             'subjudul' => 'required',
             'deskripsi' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg',
         ]);
+
+        // dd($request);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
         
@@ -56,8 +59,19 @@ class TentangController extends Controller
             'message' => $validatedData->errors()->first(),
         ], 200);
 
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+        //     $path = 'landingpage/tentang/';
+        //     $nameFile = md5($image->getClientOriginalName() . rand(rand(231, 992), 123882)) . "." . $image->getClientOriginalExtension();
+        //     Storage::disk('local')->put($path . $nameFile, file_get_contents($image));
+        //     $imagePath = $path . $nameFile;
+        // } else {
+        //     $imagePath = '';
+        // }
+        
+
         if ($request->hasfile("image"))
-        {
+        {    
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
@@ -117,19 +131,57 @@ class TentangController extends Controller
         
     public function update(Request $request, $id)
     {
+        // $Parkir = About::where("id", $id)->update([
+            
+        //     $about->judul = $request->judul,
+        //     $about->subjudul = $request->subjudul,
+        //     $about->deskripsi = $request->deskripsi,
+        //     $about->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image,
+        // ]);
+
+        // return response()->json([
+        //     'status' => true,
+        //     'message' => 'Data berhasil dirubah'
+        // ]);
+
         $about = About::find($id);
 
-        if (!$about) {
-            return response()->json(['message' => 'Data not found.'], 404);
+    $validatedData = Validator::make($request->all(), [
+        'judul' => 'required',
+        'subjudul' => 'required',
+        'deskripsi' => 'required',
+        'image' => 'image|mimes:jpg,png,jpeg',
+    ]);
+
+    if ($validatedData->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => $validatedData->errors()->first(),
+        ], 200);
+    }
+
+    if ($request->hasFile("image")) {
+        $image = $request->file('image');
+        $extension = $image->getClientOriginalExtension();
+        $filename = Carbon::now()->format('YmdHis').'.'.$extension;
+        $path = 'landingpage/tentang/'.$filename;
+        Storage::disk('local')->put($path, file_get_contents($image));
+
+        if ($about->image && file_exists($about->image)) {
+            unlink($about->image);
         }
+        $about->image = $filename;
+    }
 
-        // Mengupdate atribut-atribut
-        $about->judul = $request->judul;
-        $about->deskripsi = $request->deskripsi;
-        $about->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image;
+    $about->judul = $request->judul;
+    $about->subjudul = $request->subjudul;
+    $about->deskripsi = $request->deskripsi;
+    $about->save();
 
-        // Simpan perubahan
-        $about->save();
+    return response()->json([
+        'status' => true,
+        'message' => 'Data berhasil dirubah'
+    ]);
 
     }
 

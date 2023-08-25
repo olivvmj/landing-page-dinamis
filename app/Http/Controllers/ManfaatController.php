@@ -41,11 +41,16 @@ class ManfaatController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
         $validatedData = Validator::make($request->all(),[
+            'judul' => 'required',
+            'subjudul' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg',
             'manfaat' => 'required',
         ]);
+
+        // dd($request);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
         
@@ -54,8 +59,19 @@ class ManfaatController extends Controller
             'message' => $validatedData->errors()->first(),
         ], 200);
 
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+        //     $path = 'landingpage/tentang/';
+        //     $nameFile = md5($image->getClientOriginalName() . rand(rand(231, 992), 123882)) . "." . $image->getClientOriginalExtension();
+        //     Storage::disk('local')->put($path . $nameFile, file_get_contents($image));
+        //     $imagePath = $path . $nameFile;
+        // } else {
+        //     $imagePath = '';
+        // }
+        
+
         if ($request->hasfile("image"))
-        {
+        {    
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
@@ -64,7 +80,7 @@ class ManfaatController extends Controller
         }
 
         $manfaat = Manfaat::create([
-            // 'id' => $about->id,
+            // 'id' => $manfaat->id,
             'judul' => $request->judul,
             'subjudul' => $request->subjudul,
             'image' => $filename,
@@ -115,20 +131,57 @@ class ManfaatController extends Controller
         
     public function update(Request $request, $id)
     {
+        // $Parkir = Manfaat::where("id", $id)->update([
+            
+        //     $manfaat->judul = $request->judul,
+        //     $manfaat->subjudul = $request->subjudul,
+        //     $manfaat->deskripsi = $request->deskripsi,
+        //     $manfaat->image = $request->hasFile('image') ? $request->file('image')->store('about') : $manfaat->image,
+        // ]);
+
+        // return response()->json([
+        //     'status' => true,
+        //     'message' => 'Data berhasil dirubah'
+        // ]);
+
         $manfaat = Manfaat::find($id);
 
-        if (!$manfaat) {
-            return response()->json(['message' => 'Data not found.'], 404);
+    $validatedData = Validator::make($request->all(), [
+        'judul' => 'required',
+        'subjudul' => 'required',
+        'image' => 'image|mimes:jpg,png,jpeg',
+        'manfaat' => 'required',
+    ]);
+
+    if ($validatedData->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => $validatedData->errors()->first(),
+        ], 200);
+    }
+
+    if ($request->hasFile("image")) {
+        $image = $request->file('image');
+        $extension = $image->getClientOriginalExtension();
+        $filename = Carbon::now()->format('YmdHis').'.'.$extension;
+        $path = 'landingpage/manfaat/'.$filename;
+        Storage::disk('local')->put($path, file_get_contents($image));
+
+        if ($manfaat->image && file_exists($manfaat->image)) {
+            unlink($manfaat->image);
         }
+        $manfaat->image = $filename;
+    }
 
-        // Mengupdate atribut-atribut
-        $manfaat->judul = $request->judul;
-        $manfaat->subjudul = $request->subjudul;
-        $manfaat->image = $request->hasFile('image') ? $request->file('image')->store('about') : $about->image;
-        $manfaat->manfaat = $request->manfaat;
+    $manfaat->judul = $request->judul;
+    $manfaat->subjudul = $request->subjudul;
+    $manfaat->manfaat = $request->manfaat;
+    $manfaat->save();
 
-        // Simpan perubahan
-        $about->save();
+    return response()->json([
+        'status' => true,
+        'message' => 'Data berhasil dirubah'
+    ]);
 
     }
 
@@ -176,3 +229,4 @@ class ManfaatController extends Controller
     
     
 }
+

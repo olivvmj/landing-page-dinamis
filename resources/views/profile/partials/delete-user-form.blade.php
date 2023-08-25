@@ -1,55 +1,68 @@
-<section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Delete Account') }}
-        </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" style="margin-bottom: 0px;">Hapus Akun</h5>
+        <p>
+            Setelah akun Anda dihapus, semua sumber daya dan data yang ada di dalamnya akan dihapus secara permanen.
+            Sebelum menghapus akun Anda, harap unduh semua data atau informasi yang ingin Anda simpan.
         </p>
-    </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+        <button class="btn btn-danger my-4" id="hapusAkunButton">Hapus Akun</button>
 
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
-            @csrf
-            @method('delete')
+        <div class="modal fade" id="modal_form" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-content-demo">
+                    <div class="modal-header">
+                        <b>
+                            <h5 class="modal-title" id="modalTitle">Hapus Akun</h5>
+                        </b>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+                            @csrf
+                            @method('delete')
 
-            <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
-            </h2>
+                            <h4 class="text-center text-gray-900">
+                                Apakah Anda yakin ingin menghapus akun Anda?
+                            </h4>
 
-            <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </p>
+                            <p class="mx-1 my-3 text-sm text-gray-600">
+                                * Setelah akun Anda dihapus, semua data di dalamnya akan dihapus secara permanen.
+                            </p>
 
-            <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+                            <p class="mx-1 my-3 text-sm text-gray-600">
+                                Harap masukkan kata sandi Anda untuk mengonfirmasi bahwa Anda ingin menghapus akun Anda secara permanen.
+                            </p>
 
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
+                            <div class="col">
+                                <label for="password" class="sr-only col-md-2">Password</label>
+                                <input id="password" name="password" type="password" class="col-md-9" placeholder="Password">
+                            </div>
 
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="ml-3 btn btn-danger">Hapus Akun</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
-
-                <x-danger-button class="ml-3">
-                    {{ __('Delete Account') }}
-                </x-danger-button>
-            </div>
-        </form>
-    </x-modal>
-</section>
+<!-- Include Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const hapusAkunButton = document.getElementById('hapusAkunButton');
+    const modalForm = new bootstrap.Modal(document.getElementById('modal_form'));
+    
+    hapusAkunButton.addEventListener('click', () => {
+        modalForm.show();
+    });
+</script>
