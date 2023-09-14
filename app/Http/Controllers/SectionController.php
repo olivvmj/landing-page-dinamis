@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Manfaat;
+use App\Models\Section;
+use App\Models\SectionType;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,16 +13,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class ManfaatController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data["manfaat"] = Manfaat::all();
+        $type = SectionType::all();
         
-        return view('admin.manfaat.index', $data);
+        $section = Section::join('section_type', 'section_type.id', '=', 'section.type_id')
+                    ->get();
+
+        return view('admin.section.index', compact('type', 'section'));
     }
 
     /**
@@ -42,12 +46,14 @@ class ManfaatController extends Controller
      */
 
     public function store(Request $request){
+        // dd($request->all());
 
         $validatedData = Validator::make($request->all(),[
-            'judul' => 'required',
-            'subjudul' => 'required',
-            'image' => 'required|image|mimes:jpg,png,jpeg',
-            'manfaat' => 'required',
+            'type_section' => 'required',
+            'title'=> 'required',
+            'title_highlight'=> 'required',
+            'menu'=> 'required',
+            'image'=> 'required|image|mimes:jpg,png,jpeg',
         ]);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
@@ -62,18 +68,20 @@ class ManfaatController extends Controller
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
             $filename = Carbon::now()->format('YmdHis').'.'.$extension;
-            $path = 'landingpage/manfaat/'.$filename;
+            $path = 'landingpage/section/'.$filename;
             Storage::disk('local')->put($path , file_get_contents($image));
         }
 
-        $manfaat = Manfaat::create([
-            // 'id' => $manfaat->id,
-            'judul' => $request->judul,
-            'subjudul' => $request->subjudul,
-            'image' => $filename,
-            'manfaat' => $request->manfaat,
+        $section = Section::create([
+            'type_id' => $request->type_section,
+            'title'=> $request->title,
+            'title_highlight'=> $request->title_highlight,
+            'menu'=> $request->menu,
+            'description'=> $request->description,
+            'image'=> $filename,
         ]);
-
+        
+        // dd($request);
         return response()->json([
             'status' => true,
             'message' => 'Data berhasil disimpan!',
@@ -99,7 +107,7 @@ class ManfaatController extends Controller
      */
     public function edit($id)
     {
-        $result = Manfaat::find($id);
+        $result = Section::find($id);
     
         if ($result) {
             return response()->json(['data' => $result]);
@@ -118,58 +126,47 @@ class ManfaatController extends Controller
         
     public function update(Request $request, $id)
     {
-        // $Parkir = Manfaat::where("id", $id)->update([
-            
-        //     $manfaat->judul = $request->judul,
-        //     $manfaat->subjudul = $request->subjudul,
-        //     $manfaat->deskripsi = $request->deskripsi,
-        //     $manfaat->image = $request->hasFile('image') ? $request->file('image')->store('about') : $manfaat->image,
-        // ]);
+        $section = Section::find($id);
 
-        // return response()->json([
-        //     'status' => true,
-        //     'message' => 'Data berhasil dirubah'
-        // ]);
+        $validatedData = Validator::make($request->all(), [
+            'type_section' => 'required',
+            'title'=> 'required',
+            'title_highlight'=> 'required',
+            'menu'=> 'required',
+            // 'image'=> 'required|image|mimes:jpg,png,jpeg'
+        ]);
 
-        $manfaat = Manfaat::find($id);
-
-    $validatedData = Validator::make($request->all(), [
-        'judul' => 'required',
-        'subjudul' => 'required',
-        'image' => 'image|mimes:jpg,png,jpeg',
-        'manfaat' => 'required',
-    ]);
-
-    if ($validatedData->fails()) {
-        return response()->json([
-            'status' => false,
-            'message' => $validatedData->errors()->first(),
-        ], 200);
-    }
-
-    if ($request->hasFile("image")) {
-        $image = $request->file('image');
-        $extension = $image->getClientOriginalExtension();
-        $filename = Carbon::now()->format('YmdHis').'.'.$extension;
-        $path = 'landingpage/manfaat/'.$filename;
-        Storage::disk('local')->put($path, file_get_contents($image));
-
-        if ($manfaat->image && file_exists($manfaat->image)) {
-            unlink($manfaat->image);
+        if ($validatedData->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validatedData->errors()->first(),
+            ], 200);
         }
-        $manfaat->image = $filename;
-    }
 
-    $manfaat->judul = $request->judul;
-    $manfaat->subjudul = $request->subjudul;
-    $manfaat->manfaat = $request->manfaat;
-    $manfaat->save();
+        $section->type_id = $request->input('type_section');
+        $section->title= $request->title;
+        $section->title_highlight= $request->title_highlight;
+        $section->menu= $request->menu;
+        $section->description= $request->description;
+        if ($request->hasFile("image")) {   
+            $image = $request->file('image');
+            $extension = $image->getClientOriginalExtension();
+            $filename = Carbon::now()->format('YmdHis').'.'.$extension;
+            $path = 'landingpage/section/'.$filename;
+            Storage::disk('local')->put($path, file_get_contents($image));
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Data berhasil dirubah'
-    ]);
+            if ($section->image && file_exists($section->image)) {
+                unlink($section->image);
+            }
+            $section->image = $filename;
+        }
+        // $section->image= $filename;
+        $section->save();
 
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil dirubah'
+        ]);
     }
 
 
@@ -182,13 +179,13 @@ class ManfaatController extends Controller
     public function destroy($id)
     {
         DB::beginTransaction();
-        
+        // dd($id);
         try {
             // Find the about by ID
-            $manfaat = Manfaat::findOrFail($id);
+            $section = Section::findOrFail($id);
             
             // Delete the about
-            $manfaat->delete();
+            $section->delete();
             
             DB::commit();
     
@@ -208,9 +205,12 @@ class ManfaatController extends Controller
 
     public function datatable(Request $request)
     {
-        $data = DB::table('manfaat_parkirkan')
+        $data = DB::table('section')
+            ->join('section_type', 'section_type.id', '=', 'section.type_id')
+            ->select('section.id AS section_id', 'section_type.id AS type_id', 'section.title', 'section.title_highlight', 'section.menu', 'section.description', 'section.image', 'section_type.type_name')
             ->get();
-    
+
+        // dd($data);
         return DataTables::of($data)->make();
     }
     

@@ -7,7 +7,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SolusiController;
 use App\Http\Controllers\ManfaatController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\TentangController;
+use App\Http\Controllers\DetailSectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +44,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('kelola-fitur/datatable', [FiturController::class, 'datatable'])->name('kelola-fitur.datatable');
     Route::resource('kelola-fitur', FiturController::class);
+
+    Route::get('kelola-section/datatable', [SectionController::class, 'datatable'])->name('kelola-section.datatable');
+    Route::resource('kelola-section', SectionController::class);
+
+    Route::get('kelola-detail/datatable', [DetailSectionController::class, 'datatable'])->name('kelola-detail.datatable');
+    Route::resource('kelola-detail', DetailSectionController::class);
 
     Route::get("/logout", [LoginController::class, 'logout']);
 });

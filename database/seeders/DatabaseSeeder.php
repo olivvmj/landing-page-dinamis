@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Manfaat::class);
         $this->call(Solusi::class);
         $this->call(Fitur::class);
+        $this->call(Section_type::class);
     }
 }

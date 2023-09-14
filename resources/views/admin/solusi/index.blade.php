@@ -41,7 +41,7 @@
                                         <th style="width: 1%">Gambar</th>
                                         <th>Solusi</th>
                                         <th>Deskripsi Solusi</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -92,14 +92,14 @@
                                                 <label for="image" class="form-label">Gambar</label>
                                                 {{-- <input type="file" id="image" class="dropify" name="image" accept=".png, .jpg, .jpeg" --}}
                                                 <input id="image" class="dropify" type="file" name="image" data-default-file="" data-allowed-file-extensions="jpeg jpg png" accept=".png, .jpg, .jpeg">
-                                                <p class="small">note : format gambar (png, jpg, jpeg)</p>
+                                                <p class="small">format gambar : png, jpg, jpeg</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
-                                                <label for="solusi" class="form-label">solusi Aplikasi</label>
+                                                <label for="solusi" class="form-label">Solusi Aplikasi</label>
                                                 <input type="text" id="solusi" class="form-control" name="solusi"
                                                     value="{{ old('solusi') }}">
                                             </div>
@@ -179,10 +179,13 @@
         $(document).ready(function() {
             // Contoh Inisiator datatable severside
             table = $("#datatable").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json',
+                },
                 responsive: true,
-                searching: false,
-                paging: false,
-                info: false,
+                searching: true,
+                paging: true,
+                info: true,
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
@@ -490,6 +493,7 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
+                cancelButtonText: "Kembali",
                 confirmButtonText: "Ya, Hapus!"
             }).then((result) => {
                 if (result.value) {

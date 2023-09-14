@@ -13,7 +13,7 @@
 
     <title>PARKIRKAN</title>
 
-<!-- Lava Landing Page https://templatemo.com/tm-540-lava-landing-page-->
+    <!-- Lava Landing Page https://templatemo.com/tm-540-lava-landing-page-->
 
     <!-- Additional CSS Files -->
     <link rel="stylesheet" type="text/css" href="{{ asset('template') }}/assets/css/bootstrap.min.css">
@@ -31,10 +31,13 @@
     $solusiParkirkan = App\Models\Solusi::orderBy('id', 'asc')->get();
     $manfaatParkirkan = App\Models\Manfaat::orderBy('id', 'asc')->get();
     $fiturParkirkan = App\Models\Fitur::orderBy('id', 'asc')->get();
-    
+    $section = App\Models\Section::orderBy('id', 'asc')->get();
+    $detail = App\Models\DetailSection::orderBy('id', 'asc')->get();
+
 @endphp
 
 <body>
+
 
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
@@ -48,10 +51,9 @@
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li><a href="#welcome" class="menu-item">Tentang</a></li>
-                            <li><a href="#manfaat" class="menu-item">Manfaat</a></li>
-                            <li><a href="#fitur" class="menu-item">Fitur</a></li>
-                            <li><a href="#kontak" class="menu-item">Kontak</a></li>
+                            @foreach ($section as $item)
+                                <li><a href="#{{ $item->menu }}">{{ $item->menu }}</a></li>
+                            @endforeach
                         </ul>
                         <!-- ***** Menu End ***** -->
                     </nav>
@@ -62,148 +64,95 @@
     <!-- ***** Header Area End ***** -->
 
 
-    <!-- ***** Welcome Area Start ***** -->
-    <section class="section" id="welcome">
-        <div class="header-text">
-            <div class="container">
-                <div class="row">
-                    <div class="left-content col-lg-6 rounded mx-auto d-block mt-5">
-                        <h1>{{ $aboutParkirkan->judul }} <em>{{ $aboutParkirkan->subjudul }}</em></h1>
-                        <p>{{ $aboutParkirkan->deskripsi }}</p>
-                    </div>
-                    <div class="left-image col-lg-5 rounded mx-auto d-block">
-                        <img src="{{ asset('storage/landingpage/tentang/' . $aboutParkirkan->image) }}"
-                            class="rounded img-fluid d-block mx-auto" alt="App">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ***** Welcome Area End ***** -->
-
-    <!-- ***** SOLUSI START ***** -->
-    {{-- <section class="section" id="solusi">
-        <div class="container">
-            <div class="row">
-                <div class="left-content col-lg-6">
-                    <h2>{{ $solusiParkirkan->judul }} <em> {{ $solusiParkirkan->subjudul }}</em></h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="left-image col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix-big"
-                    data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <img src="{{ asset('storage/landingpage/solusi/' . $solusiParkirkan->image) }}"
-                        class="rounded img-fluid d-block mx-auto" alt="App">
-                </div>
-                <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
-                    <ul>
-                        @foreach ($solusiParkirkan as $item)
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                            <img src="{{ asset('template') }}/assets/images/about-icon-01.png" alt="">
-                            <div class="text">
-                                <h4>{{ $item->solusi}}</h4>
-                                <p>{{ $item->desk_solusi}}</p>
+    @foreach ($section as $item)
+        @if ($item->type_id == '1')
+            <!-- ***** Welcome Area Start ***** -->
+            <section class="section" id="welcome">
+                <div class="header-text">
+                    <div class="container">
+                        <div class="row">
+                            <div class="left-content col-lg-6 rounded mx-auto d-block mt-5">
+                                <h1>{{ $item->title }} <em>{{ $item->title_highlight }}</em></h1>
+                                <p>{{ $item->description }}</p>
                             </div>
-                        </li>
-                        @endforeach
-                    </ul>
+                            <div class="left-image col-lg-5 rounded mx-auto d-block">
+                                <img src="{{ asset('storage/landingpage/section/' . $item->image) }}"
+                                    class="rounded img-fluid d-block mx-auto" alt="App">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section> --}}
+            </section>
+            <!-- ***** Welcome Area End ***** -->
 
-    <section class="section" id="solusi">
-        <div class="container">
-            <div class="row">
-                <div class="left-content col-lg-6">
-                    @if ($solusiParkirkan->count() > 0)
-                        @php
-                            $firstItem = $solusiParkirkan->first();
-                        @endphp
-                        <h2>{{ $firstItem->judul }} <em> {{ $firstItem->subjudul }}</em></h2>
-                    @endif
+        @elseif($item->type_id == '3')
+            <!-- ***** SOLUSI START ***** -->
+            <section class="section" id="solusi">
+                <div class="container">
+                    <div class="row">
+                        <div class="left-content col-lg-6">
+                            <h2>{{ $item->title }} <em> {{ $item->title_highlight }}</em></h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="left-image col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix-big"
+                            data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                            <img src="{{ asset('storage/landingpage/section/' . $item->image) }}"
+                                class="rounded img-fluid d-block mx-auto" alt="App">
+                        </div>
+                        <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
+                            <ul>
+                                @foreach ($detail as $item)
+                                    <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
+                                        <img src="{{ asset('storage/landingpage/detail/' . $item->image) }}">
+                                        <div class="text">
+                                            <h4>{{ $item->title }}</h4>
+                                            <p>{{ $item->desc }}</p>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="left-image col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix-big"
-                    data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    @if ($solusiParkirkan->count() > 0)
-                        @php
-                            $firstItem = $solusiParkirkan->first();
-                        @endphp
-                        <img src="{{ asset('storage/landingpage/solusi/' . $firstItem->image) }}"
-                            class="rounded img-fluid d-block mx-auto" alt="App">
-                    @endif
-                </div>
-                <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
-                    <ul>
-                        @foreach ($solusiParkirkan as $item)
-                            <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                                <img src="{{ asset('template') }}/assets/images/about-icon-01.png" alt="">
-                                <div class="text">
-                                    <h4>{{ $item->solusi }}</h4>
-                                    <p>{{ $item->desk_solusi }}</p>
+            </section>
+
+            <!-- ***** SOLUSI END ***** -->
+        
+        @elseif($item->type_id == '2')
+            <!-- ***** FITUR START ***** -->
+            <section class="section mt-5" id="fitur">
+                <div class="container">
+                    <div class="row">
+                        <div class="left-content rounded mx-auto d-block mt-5 mb-5">
+                                <h2>{{ $item->title }} <em>{{ $item->title_highlight }}</em></h2>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        @foreach ($detail as $item)
+                            <div class="col-lg-3 mb-5" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
+                                <div class="features-item">
+                                    <div class="features-icon">
+                                        <img src="{{ asset('storage/landingpage/detail/' . $item->image) }}">
+                                        <h4>{{ $item->title }}</h4>
+                                        <p>{{ $item->desc }}</p>
+                                    </div>
                                 </div>
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
+            <!-- ***** FITUR END ***** -->
+        @endif
+    @endforeach
 
-    <!-- ***** SOLUSI END ***** -->
+
+
 
 
     <!-- ***** MANFAAT START ***** -->
     {{-- <section class="section mt-5" id="manfaat">
-        <div class="container">
-            <div class="row">
-                <div class="left-content col-lg-6">
-                    <h2><em>MANFAAT</em> UNTUK PENGELOLA PARKIR</h2>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="left-image col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix-big"
-                    data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <img src="{{ asset('template') }}/assets/images/manfaat.png"
-                        class="rounded img-fluid d-block mx-auto" alt="App">
-                </div>
-
-                <div class="right-text offset-lg-1 col-lg-5 col-md-12 col-sm-12 mobile-bottom-fix">
-                    <ul>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                            <div class="text">
-                                <p>Tidak memerlukan barrier gate.</p>
-                            </div>
-                        </li>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                            <div class="text">
-                                <p>Waktu masuk dan keluar tercatat by system.</p>
-                            </div>
-                        </li>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                            <div class="text">
-                                <p>Manajemen Inventory / kapasitas slot parkir.</p>
-                            </div>
-                        </li>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                            <div class="text">
-                                <p>Metode pembayaran Tunai / Non Tunai</p>
-                            </div>
-                        </li>
-                        <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                            <div class="text">
-                                <p>Model tarif yang sangat fleksibel.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-    <section class="section mt-5" id="manfaat">
         <div class="container">
             <div class="row">
                 <div class="left-content col-lg-6">
@@ -240,38 +189,11 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- ***** MANFAAT END ***** -->
 
-    <!-- ***** FITUR START ***** -->
-    <section class="section mt-5" id="fitur">
-        <div class="container">
-            <div class="row">
-                <div class="left-content rounded mx-auto d-block mt-5 mb-5">
-                    @if ($fiturParkirkan->count() > 0)
-                        @php
-                            $firstItem = $fiturParkirkan->first();
-                        @endphp
-                        <h2>{{ $firstItem->judul }} <em>{{ $firstItem->subjudul }}</em></h2>
-                    @endif
-                </div>
-            </div>
-            <div class="row mb-5">
-                @foreach ($fiturParkirkan as $item)
-                    <div class="col-lg-3 mb-5" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                        <div class="features-item">
-                            <div class="features-icon">
-                                <img src="{{ asset('storage/landingpage/fitur/' . $item->image) }}">
-                                <h4>{{ $item->fitur }}</h4>
-                                <p>{{ $item->desk_fitur }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-    <!-- ***** FITUR END ***** -->
+
+    
 
     <!-- ***** footer Starts ***** -->
     <footer class="mt-5 pt-5" id="kontak">
@@ -287,8 +209,8 @@
                             <div class="embed-responsive embed-responsive-16by9">
                                 <iframe
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.781427168013!2d106.82960027346665!3d-6.160021260370682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5c3712ffacb%3A0x1d56b0cef562247d!2sJl.%20Krekot%20Bunder%20Raya%20No.26%2C%20RW.6%2C%20Ps.%20Baru%2C%20Kecamatan%20Sawah%20Besar%2C%20Kota%20Jakarta%20Pusat%2C%20Daerah%20Khusus%20Ibukota%20Jakarta%2010710!5e0!3m2!1sid!2sid!4v1690262527280!5m2!1sid!2sid"
-                                    width="600" height="450" style="border:0;" allowfullscreen=""
-                                    loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
                             <ul class="social rounded mx-auto d-block mb-5">
                                 <li><a href="#"><i class="fa fa-facebook"></i></a></li>

@@ -39,16 +39,11 @@
                 </li>
                 
                 <li>
-                    {{-- @if (Auth::user()->level == 1)
+                    {{-- @if (Auth::user())
                     <a class="dropdown-item d-flex align-items-center" href="{{ url('/admin/profil') }}">
                         <i class="bi bi-person"></i>
                         <span>Profil Saya</span>
                     </a>     
-                    @else
-                    <a class="dropdown-item d-flex align-items-center" href="{{ url('/dokter/profil') }}">
-                        <i class="bi bi-person"></i>
-                        <span>Profil Saya</span>
-                    </a>
                     @endif --}}
                 </li>
                 <li>
@@ -72,7 +67,15 @@
                 <li>
                     <hr class="dropdown-divider">
                 </li> --}}
-                
+            
+                <li>
+                    <a href="{{ url('/profil') }}">
+                        <button type="submit" class="dropdown-item d-flex align-items-center">
+                            <i class="bi bi-person"></i>
+                            Profil
+                        </button>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ url('/logout') }}">
                         <button type="submit" class="dropdown-item d-flex align-items-center">

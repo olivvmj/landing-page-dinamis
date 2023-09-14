@@ -13,20 +13,20 @@
     <!-- End Dashboard Nav -->
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('kelola-tentang.index') }}">
+        <a class="nav-link collapsed" href="{{ route('kelola-section.index') }}">
             <i class="bi bi-info-circle"></i>
-            <span>Tentang Parkirkan</span>
+            <span>Manajemen Konten</span>
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('kelola-solusi.index') }}">
+        <a class="nav-link collapsed" href="{{ route('kelola-detail.index') }}">
             <i class="bi bi-lightbulb"></i>
-            <span>Solusi Parkirkan</span>
+            <span>Detail Konten</span>
         </a>
     </li>
 
-    <li class="nav-item">
+    {{--<li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('kelola-manfaat.index') }}">
             <i class="bi bi-heart"></i>
             <span>Manfaat Parkirkan</span>
@@ -38,12 +38,12 @@
             <i class="bi bi-gear"></i>
             <span>Fitur Parkirkan</span>
         </a>
-    </li>
+    </li> --}}
     
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="{{url('/profil') }}">
             <i class="bi bi-person"></i>
             <span>Profil</span>
         </a>
-    </li><!-- End Profile Page Nav -->
+    </li><!-- End Profile Page Nav --> --}}
 </ul>

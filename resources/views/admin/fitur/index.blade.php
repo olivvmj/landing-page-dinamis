@@ -41,7 +41,7 @@
                                         <th style="width: 1%">Gambar</th>
                                         <th>Fitur</th>
                                         <th>Deskripsi Fitur</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -92,7 +92,7 @@
                                                 <label for="image" class="form-label">Gambar</label>
                                                 {{-- <input type="file" id="image" class="dropify" name="image" accept=".png, .jpg, .jpeg" --}}
                                                 <input id="image" class="dropify" type="file" name="image" data-default-file="" data-allowed-file-extensions="jpeg jpg png" accept=".png, .jpg, .jpeg">
-                                                <p class="small">note : format gambar (png, jpg, jpeg)</p>
+                                                <p class="small">format gambar : png, jpg, jpeg</p>
                                             </div>
                                         </div>
                                     </div>
@@ -490,6 +490,7 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
+                cancelButtonText: "Kembali",
                 confirmButtonText: "Ya, Hapus!"
             }).then((result) => {
                 if (result.value) {
