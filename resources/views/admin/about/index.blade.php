@@ -22,11 +22,11 @@
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title" style="margin-bottom: 0px;">Tentang Parkirkan</h5>
+                        <h5 class="card-title" style="margin-bottom: 0px;">Manajemen Konten</h5>
                         <div>
                             <a class="btn btn-primary modal-effect mb-3 data-table-btn" data-bs-effect="effect-super-scaled"
                                 onclick="create()">
-                                <span class="fe fe-plus"></span>Tambah Data Baru
+                                <span class="fe fe-plus"></span>+ Tambah Data Baru
                             </a>
                         </div>
                         <br>
@@ -36,11 +36,13 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">No</th>
+                                        <th>Menu</th>
+                                        <th>Tipe Konten</th>
                                         <th>Judul</th>
-                                        <th>Sub-Judul</th>
-                                        <th>Deskripsi Aplikasi</th>
+                                        <th>Judul Highlight</th>
+                                        <th>Deskripsi</th>
                                         <th style="width: 1%">Gambar</th>
-                                        <th>Option</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -68,10 +70,14 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
-                                                <input type="hidden" id="id" name="id">
-                                                <label for="judul" class="form-label">Judul</label>
-                                                <input type="text" name="judul" class="form-control" id="judul"
-                                                    value="{{ old('judul') }}">
+                                                <label for="type_name" class="form-label">Status</label>
+                                                <select name="type_name" class="form-control" id="type_name">
+                                                    @foreach ($section_type as $type)
+                                                        <option value="{{ $type->type_name }}"
+                                                            {{ old('type_name') == $type->type_name ? 'selected' : '' }}>
+                                                            {{ $type->type_name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -99,7 +105,10 @@
                                             <div class="mb-3">
                                                 <label for="image" class="form-label">Gambar</label>
                                                 {{-- <input type="file" id="image" class="dropify" name="image" accept=".png, .jpg, .jpeg" --}}
-                                                <input id="image" class="dropify" type="file" name="image" data-default-file="" data-allowed-file-extensions="jpeg jpg png" accept=".png, .jpg, .jpeg">
+                                                <input id="image" class="dropify" type="file" name="image"
+                                                    data-default-file="" data-allowed-file-extensions="jpeg jpg png"
+                                                    accept=".png, .jpg, .jpeg">
+                                                <p class="small">format gambar : png, jpg, jpeg</p>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +134,6 @@
     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 
-
     <script src="https://cdn.jsdelivr.net/npm/dropify/dist/js/dropify.min.js"></script>
 
     <!-- DATA TABLE JS-->
@@ -140,7 +148,7 @@
                     default: 'Seret dan lepas berkas di sini atau klik',
                     replace: 'Seret dan lepas atau klik untuk mengganti',
                     remove: 'Hapus',
-                    error: 'Oops, terjadi kesalahan.'
+                    error: 'format file ini tidak diizinkan.'
                 }
             });
         });
@@ -168,10 +176,13 @@
         $(document).ready(function() {
             // Contoh Inisiator datatable severside
             table = $("#datatable").DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json',
+                },
                 responsive: true,
-                searching: false,
-                paging: false,
-                info: false,
+                searching: true,
+                paging: true,
+                info: true,
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
@@ -283,11 +294,11 @@
             });
 
 
-            $('#btnSave').on('click', function () {
+            $('#btnSave').on('click', function() {
                 submit();
             })
-            
-            $('#form').on('submit', function(e){
+
+            $('#form').on('submit', function(e) {
                 e.preventDefault();
 
                 submit();
@@ -302,7 +313,7 @@
             $('#form')[0].reset();
             df = $('#image').dropify();
 
-            
+
             // $('.dropify').dropify();
             df = df.data('dropify');
             df.resetPreview();
@@ -318,14 +329,14 @@
             submit_method = 'edit';
             var df = "";
             df = $('#image').dropify();
-            
+
             $('#form')[0].reset();
 
             var url = "{{ route('kelola-tentang.edit', ':id') }}";
             url = url.replace(':id', id);
-            
+
             $.get(url, function(response) {
-                
+
                 var data = response.data;
 
                 // console.log(data.image);
@@ -344,7 +355,7 @@
                 df = df.data('dropify');
                 df.resetPreview();
                 df.clearElement();
-                df.settings.defaultFile = `{{ asset('storage/landingpage/tentang') }}/`+data.image;
+                df.settings.defaultFile = `{{ asset('storage/landingpage/tentang') }}/` + data.image;
                 df.destroy();
                 df.init();
                 // Tampilkan gambar lama jika ada
@@ -357,12 +368,11 @@
 
             });
         }
-        
+
         function submit() {
             var id = $('#id').val();
             var form = $('#form')[0];
             var formData = new FormData(form);
-        
 
             var judul = $('#judul').val();
             var subjudul = $('#subjudul').val();
@@ -375,7 +385,7 @@
 
             $('#btnSave').text('Menyimpan...');
             $('#btnSave').attr('disabled', true);
-            
+
             if (submit_method == 'edit') {
                 // formData.append('judul', judul);
                 // formData.append('subjudul', subjudul);
@@ -384,7 +394,7 @@
                 var url = "{{ route('kelola-tentang.update', ':id') }}";
                 url = url.replace(':id', id);
                 formData.append('_method', 'PUT');
-            }                
+            }
             // } else if (submit_method === 'edit') {
             //     var url = "{{ route('kelola-tentang.update', ':id') }}";
             //     url = url.replace(':id', id);
@@ -398,7 +408,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: formData, 
+                data: formData,
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -430,7 +440,7 @@
                             timer: 2000
                         });
                     }
-                    resetForm();
+                    // resetForm();
                 },
                 error: function(data) {
                     var error_message = Object.values(data.responseJSON.errors).join(' ');
@@ -464,6 +474,7 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
+                cancelButtonText: "Kembali",
                 confirmButtonText: "Ya, Hapus!"
             }).then((result) => {
                 if (result.value) {

@@ -2,7 +2,7 @@
 
 @section('title_content', 'Kelola Akun Admin')
 
-@section('page_title', 'Profile Admin')
+@section('page_title', 'Profil Admin')
 
 @section('breadcrumb')
     <ol class="breadcrumb">

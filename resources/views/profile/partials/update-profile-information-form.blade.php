@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4 my-4">
-                    <x-primary-button class="btn btn-primary" id="show-sweet-alert">{{ __('simpan') }}</x-primary-button>
+                    <x-primary-button class="btn btn-primary" id="show-sweet-alert">{{ __('SIMPAN') }}</x-primary-button>
 
                     @if (session('status') === 'profile-updated')
                         <script>

@@ -2,7 +2,7 @@
 
 @section('title_content', 'Kelola Landing Page')
 
-@section('page_title', 'Manfaat Parkirkan')
+@section('page_title', 'Kelola Section')
 
 @section('breadcrumb')
     <ol class="breadcrumb">
@@ -36,10 +36,12 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">No</th>
+                                        <th>Tipe Konten</th>
                                         <th>Judul</th>
                                         <th>Sub-Judul</th>
+                                        <th>Menu</th>
+                                        <th>Deskripsi</th>
                                         <th style="width: 1%">Gambar</th>
-                                        <th>Manfaat</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -64,24 +66,66 @@
                             <form id="form" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="image_lama" id="image_lama">
+                                <input type="hidden" id="id" name="id">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
-                                                <input type="hidden" id="id" name="id">
-                                                <label for="judul" class="form-label">Judul</label>
-                                                <input type="text" name="judul" class="form-control" id="judul"
-                                                    value="{{ old('judul') }}">
+                                                <label for="type_id" class="form-label">Tipe Section</label>
+                                                {{-- <select class="form-select" name="type_section" aria-label="Default select example">
+                                                    <option selected>Pilih Tipe Section</option>
+                                                    @foreach ($type as $item)
+                                                        <option value="{{ old($item->id) }}">{{ $item->type_name }}</option>
+                                                    @endforeach
+                                                </select> --}}
+                                                <select class="form-select" name="type_section" aria-label="Default select example" id="type_section">
+                                                    <option disabled selected>Pilih Tipe Section</option>
+                                                    {{-- <option disabled>Pilih Tipe Section</option> --}}
+                                                    @foreach ($type as $item)
+                                                        <option value="{{ $item->id }}" {{ old('type_section', '') == $item->id ? 'selected' : '' }}>
+                                                            {{ $item->type_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
-                                                <input type="hidden" id="id" name="id">
-                                                <label for="subjudul" class="form-label">Sub Judul</label>
-                                                <input type="text" name="subjudul" class="form-control" id="subjudul"
-                                                    value="{{ old('subjudul') }}">
+                                                <label for="title" class="form-label">Judul</label>
+                                                <input type="text" name="title" class="form-control" id="title"
+                                                    value="{{ old('title') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="mb-3">
+                                                {{-- <input type="hidden" id="id" name="id"> --}}
+                                                <label for="title_highlight" class="form-label">Judul Highlight</label>
+                                                <input type="text" name="title_highlight" class="form-control" id="title_highlight"
+                                                    value="{{ old('title_highlight') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="mb-3">
+                                                {{-- <input type="hidden" id="id" name="id"> --}}
+                                                <label for="menu" class="form-label">Menu</label>
+                                                <input type="text" name="menu" class="form-control" id="menu"
+                                                    value="{{ old('menu') }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="mb-3">
+                                                {{-- <input type="hidden" id="id" name="id"> --}}
+                                                <label for="description" class="form-label">Deskripsi</label>
+                                                <textarea type="textarea" name="description" class="form-control" id="description"
+                                                    value="{{ old('description') }}"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -92,15 +136,6 @@
                                                 {{-- <input type="file" id="image" class="dropify" name="image" accept=".png, .jpg, .jpeg" --}}
                                                 <input id="image" class="dropify" type="file" name="image" data-default-file="" data-allowed-file-extensions="jpeg jpg png" accept=".png, .jpg, .jpeg">
                                                 <p class="small">format gambar : png, jpg, jpeg</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="mb-3">
-                                                <label for="manfaat" class="form-label">Manfaat Aplikasi</label>
-                                                <input type="text" id="manfaat" class="form-control" name="manfaat"
-                                                    value="{{ old('manfaat') }}">
                                             </div>
                                         </div>
                                     </div>
@@ -169,14 +204,17 @@
         $(document).ready(function() {
             // Contoh Inisiator datatable severside
             table = $("#datatable").DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json',
+                },
                 responsive: true,
-                searching: false,
-                paging: false,
-                info: false,
+                searching: true,
+                paging: true,
+                info: true,
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
-                ajax: "{{ route('kelola-manfaat.datatable') }}",
+                ajax: "{{ route('kelola-section.datatable') }}",
                 columnDefs: [{
                         targets: 0,
                         render: function(data, type, full, meta) {
@@ -186,39 +224,76 @@
                     {
                         targets: 1,
                         createdCell: function(td, cellData, rowData, row, col) {
-                            if (cellData === null || cellData === undefined || cellData === "") {
-                                $(td).html();
-                            } else {
-                                $(td).html(cellData);
-                                if (cellData.length > 150) {
-                                    let txt = cellData;
-                                    $(td).text(txt.substr(0, 150) + '...');
-                                }
+                            $(td).html(cellData);
+                            if (cellData.length > 150) {
+                                let txt = cellData;
+                                $(td).text(txt.substr(0, 150) + '...');
                             }
-                        },
+                        }
                     },
                     {
                         targets: 2,
                         createdCell: function(td, cellData, rowData, row, col) {
-                            if (cellData === null || cellData === undefined || cellData === "") {
-                                $(td).html();
-                            } else {
+                            $(td).html(cellData);
+                            if (cellData.length > 150) {
+                                let txt = cellData;
+                                $(td).text(txt.substr(0, 150) + '...');
+                            }
+                        }
+                    },
+                    {
+                        targets: 3,
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).html(cellData);
+                            if (cellData.length > 150) {
+                                let txt = cellData;
+                                $(td).text(txt.substr(0, 150) + '...');
+                            }
+                        }
+                    },
+                    {
+                        targets: 4,
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).html(cellData);
+                            if (cellData.length > 150) {
+                                let txt = cellData;
+                                $(td).text(txt.substr(0, 150) + '...');
+                            }
+                        }
+                    },
+                    // {
+                    //     targets: 5,
+                    //     createdCell: function(td, cellData, rowData, row, col) {
+                    //         $(td).html(cellData);
+                    //         if (cellData.length > 150) {
+                    //             let txt = cellData;
+                    //             $(td).text(txt.substr(0, 150) + '...');
+                    //         }
+                    //     }
+                    // },
+                    {
+                        targets: 5,
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            if (cellData !== null) {
                                 $(td).html(cellData);
                                 if (cellData.length > 150) {
                                     let txt = cellData;
                                     $(td).text(txt.substr(0, 150) + '...');
                                 }
+                            } else {
+                                $(td).html("");
                             }
-                        },
+                        }
                     },
+
                     {
-                        targets: 3,
+                        targets: 6,
                         render: function(data, type, full, meta) {
                             var imagePath = full.image;
                             var imageUrl;
 
                             if (imagePath) {
-                                imageUrl = "{{ url('storage/landingpage/manfaat/') }}/" + imagePath;
+                                imageUrl = "{{ url('storage/landingpage/section/') }}/" + imagePath;
                             } else {
                                 imageUrl = "{{ asset('template') }}/assets/images/img.png";
                             }
@@ -228,23 +303,8 @@
                         }
                     },
                     {
-                        targets: 4,
-                        createdCell: function(td, cellData, rowData, row, col) {
-                            if (cellData === null || cellData === undefined || cellData === "") {
-                                $(td).html();
-                            } else {
-                                $(td).html(cellData);
-                                if (cellData.length > 150) {
-                                    let txt = cellData;
-                                    $(td).text(txt.substr(0, 150) + '...');
-                                }
-                            }
-                        },
-                    },
-                    {
-                        targets: -1,
+                        targets: 7,
                         render: function(data, type, full, meta) {
-                            // console.log(data);
                             return `
                                 <div class="btn-list">
                                     <a href="javascript:void(0)" onclick="edit('${data}')" class="btn btn-sm btn-primary modal-effect btn-edit" data-bs-effect="effect-super-scaled"><i class="bi bi-pencil"></i></a>
@@ -258,23 +318,30 @@
                         },
                     },
                 ],
-                columns: [{
+                columns: [
+                    {
                         data: null
                     },
                     {
-                        data: 'judul'
+                        data: 'type_name'
                     },
                     {
-                        data: 'subjudul'
+                        data: 'title'
+                    },
+                    {
+                        data: 'title_highlight'
+                    },
+                    {
+                        data: 'menu'
+                    },
+                    {
+                        data: 'description'
                     },
                     {
                         data: 'image'
                     },
                     {
-                        data: 'manfaat'
-                    },
-                    {
-                        data: 'id'
+                        data: 'section_id'
                     },
                 ]
             });
@@ -305,7 +372,7 @@
             df.resetPreview();
             df.clearElement();
             $('#modal_form').modal('show');
-            $('.modal-title').text('Tambah Data Manfaat Parkirkan');
+            $('.modal-title').text('Tambah Data Section');
             // $('#btnSave').on('click', function() {
             //     submit();
             // })
@@ -315,78 +382,70 @@
             submit_method = 'edit';
             var df = "";
             df = $('#image').dropify();
-            
+
             $('#form')[0].reset();
 
-            var url = "{{ route('kelola-manfaat.edit', ':id') }}";
+            var url = "{{ route('kelola-section.edit', ':id') }}";
             url = url.replace(':id', id);
-            
+
             $.get(url, function(response) {
-                
+
                 var data = response.data;
 
-                // console.log(data.image);
+                // console.log(`{{ asset('storage/landingpage/section') }}/` + data.image);
 
                 $('#id').val(data.id);
 
                 $('#modal_form').modal('show');
-                $('.modal-title').text('Edit Data manfaat');
+                $('.modal-title').text('Edit Data Section');
                 // $('.dropify').dropify();
-                $('#judul').val(data.judul);
-                $('#subjudul').val(data.subjudul);
-                $('#manfaat').val(data.manfaat);
+                $('#type_section').val(data.type_id);
+                $('#type_name').val(data.type_name);
+                $('#title').val(data.title);
+                $('#title_highlight').val(data.title_highlight);
+                $('#menu').val(data.menu);
+                $('#description').val(data.description);
+                // $('#image').val(`{{ asset('storage/landingpage/section') }}/` + data.image);
+                $('#image').attr(`data-default-file`, `{{ asset('storage/landingpage/section') }}/` + data.image);
+                $('.img-preview').append(`{{ asset('storage/landingpage/section') }}/` + data.image);
+                let img = `{{ asset('storage/landingpage/section') }}/` + data.image;
+                $('.dropify-preview').show();
+                $('.dropify-render').empty().append(`<img src="${img}">`)
 
-                // var imageName = data.manfaat.image;
+                // df = df.data('dropify');
+                // df.resetPreview();
+                // df.clearElement();
+                // df.settings.defaultFile = `{{ asset('storage/landingpage/section') }}/` + data.image;
+                // df.destroy();
+                // df.init();
 
-                df = df.data('dropify');
-                df.resetPreview();
-                df.clearElement();
-                df.settings.defaultFile = `{{ asset('storage/landingpage/manfaat') }}/`+data.image;
-                df.destroy();
-                df.init();
-                // Tampilkan gambar lama jika ada
-                // if (imageName) {
-                //     var imageUrl = "{{ url('storage') }}/" + imageName;
-                //     $('#image').attr('src', imageUrl);
-                // } else {
-                //     $('#image').attr('src', "{{ asset('admin/assets/img/default_gambar.png') }}");
-                // }
+                previewImage();
 
             });
         }
         
         function submit() {
             var id = $('#id').val();
+            // console.log(id);
             var form = $('#form')[0];
             var formData = new FormData(form);
-        
 
-            var judul = $('#judul').val();
-            var subjudul = $('#subjudul').val();
-            var image = $('#image')[0].files[0];
-            var manfaat = $('#manfaat').val();
-            // var image = $('#image').prop('files')[0];
-            // var submit_method = '';
-            // console.log(judul);            
-            var url = "{{ route('kelola-manfaat.store') }}";
+            // console.log($('#modal_form #image').val());
+        
+            var image = $('#image')[0].files[0]; 
+            // console.log(image);
+            var url = "{{ route('kelola-section.store') }}";
 
             $('#btnSave').text('Menyimpan...');
             $('#btnSave').attr('disabled', true);
             
             if (submit_method == 'edit') {
-                // formData.append('judul', judul);
-                // formData.append('subjudul', subjudul);
-                // formData.append('manfaat', manfaat);
-                // var url = "{{ route('kelola-manfaat.store') }}";
-                var url = "{{ route('kelola-manfaat.update', ':id') }}";
+                var url = "{{ route('kelola-section.update', ':id') }}";
                 url = url.replace(':id', id);
                 formData.append('_method', 'PUT');
+
+                // console.log(url);
             }                
-            // } else if (submit_method === 'edit') {
-            //     var url = "{{ route('kelola-manfaat.update', ':id') }}";
-            //     url = url.replace(':id', id);
-            //     formData.append('_method', 'PUT');
-            // }
 
             $.ajax({
                 url: url,
@@ -400,10 +459,10 @@
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     if (data.status) {
-                        var manfaat = data.manfaat;
-                        console.log("manfaat:", manfaat);
+                        var section = data.section;
+                        // console.log("section:", section);
                         $('#modal_form').modal('hide');
                         Swal.fire({
                             toast: false,
@@ -427,7 +486,7 @@
                             timer: 2000
                         });
                     }
-                    resetForm();
+                    // resetForm();
                 },
                 error: function(data) {
                     var error_message = Object.values(data.responseJSON.errors).join(' ');
@@ -451,7 +510,7 @@
         }
 
         function destroy(id) {
-            var url = "{{ route('kelola-manfaat.destroy', ':id') }}";
+            var url = "{{ route('kelola-section.destroy', ':id') }}";
             url = url.replace(':id', id);
 
             Swal.fire({
