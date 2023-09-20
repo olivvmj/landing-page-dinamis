@@ -127,7 +127,6 @@ class DetailSectionController extends Controller
 
         $validatedData = Validator::make($request->all(),[
             'menu_section' => 'required',
-            'image'=> 'required|image|mimes:jpg,png,jpeg',
             'title'=> 'sometimes',
             'desc'=> 'sometimes',
         ]);
@@ -139,6 +138,10 @@ class DetailSectionController extends Controller
             ], 200);
         }
 
+        $detail->section_id = $request->input('menu_section');
+        $detail->title= $request->title;
+        $detail->desc= $request->desc;
+
         if ($request->hasFile("image")) {   
             $image = $request->file('image');
             $extension = $image->getClientOriginalExtension();
@@ -148,14 +151,9 @@ class DetailSectionController extends Controller
 
             if ($detail->image && file_exists($detail->image)) {
                 unlink($detail->image);
+            }else{
             }
-            $detail->image = $filename;
         }
-
-        $detail->section_id = $request->input('menu_section');
-        $detail->image= $filename;
-        $detail->title= $request->title;
-        $detail->desc= $request->desc;
         $detail->save();
 
         return response()->json([

@@ -27,13 +27,13 @@
 </head>
 
 @php
-    $aboutParkirkan = App\Models\About::orderBy('id', 'desc')->first();
-    $solusiParkirkan = App\Models\Solusi::orderBy('id', 'asc')->get();
-    $manfaatParkirkan = App\Models\Manfaat::orderBy('id', 'asc')->get();
-    $fiturParkirkan = App\Models\Fitur::orderBy('id', 'asc')->get();
     $section = App\Models\Section::orderBy('id', 'asc')->get();
-    $detail = App\Models\DetailSection::orderBy('id', 'asc')->get();
-
+    foreach ($section as $key => $value) {
+        $section[$key]->detail = App\Models\DetailSection::where('section_id', $value->id)->orderBy('id', 'asc')->get();
+    }
+    // $data = App\Models\Section::leftJoin('section_detail', 'section.id', '=', 'section_detail.section_id')
+    //         ->get();
+    // dd($section);
 @endphp
 
 <body>
@@ -52,7 +52,7 @@
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
                             @foreach ($section as $item)
-                                <li><a href="#{{ $item->menu }}">{{ $item->menu }}</a></li>
+                                <li><a href="#{{ $item->section_code }}">{{ $item->menu }}</a></li>
                             @endforeach
                         </ul>
                         <!-- ***** Menu End ***** -->
@@ -65,9 +65,15 @@
 
 
     @foreach ($section as $item)
+        
+        {{--
+            type_id 1 = banner
+            type_id 2 = card
+            type_id 3 = content (section manfaat & solusi)
+            --}}
         @if ($item->type_id == '1')
             <!-- ***** Welcome Area Start ***** -->
-            <section class="section" id="welcome">
+            <section class="section welcome" id="{{ $item->section_code }}">
                 <div class="header-text">
                     <div class="container">
                         <div class="row">
@@ -84,10 +90,9 @@
                 </div>
             </section>
             <!-- ***** Welcome Area End ***** -->
-
         @elseif($item->type_id == '3')
             <!-- ***** SOLUSI START ***** -->
-            <section class="section" id="solusi">
+            <section class="section solusi" id="{{ $item->section_code }}">
                 <div class="container">
                     <div class="row">
                         <div class="left-content col-lg-6">
@@ -101,41 +106,40 @@
                                 class="rounded img-fluid d-block mx-auto" alt="App">
                         </div>
                         <div class="right-text offset-lg-1 col-lg-6 col-md-12 col-sm-12 mobile-bottom-fix">
-                            <ul>
-                                @foreach ($detail as $item)
+                            @foreach ($item->detail as $detail)
+                                <ul>
                                     <li data-scroll-reveal="enter right move 30px over 0.6s after 0.4s">
-                                        <img src="{{ asset('storage/landingpage/detail/' . $item->image) }}">
+                                        <img src="{{ asset('storage/landingpage/detail/' . $detail->image) }}">
                                         <div class="text">
-                                            <h4>{{ $item->title }}</h4>
-                                            <p>{{ $item->desc }}</p>
+                                            <h4>{{ $detail->title }}</h4>
+                                            <p>{{ $detail->desc }}</p>
                                         </div>
                                     </li>
-                                @endforeach
-                            </ul>
+                                </ul>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- ***** SOLUSI END ***** -->
-        
         @elseif($item->type_id == '2')
             <!-- ***** FITUR START ***** -->
-            <section class="section mt-5" id="fitur">
+            <section class="section mt-5 fitur" id="{{ $item->section_code }}">
                 <div class="container">
                     <div class="row">
                         <div class="left-content rounded mx-auto d-block mt-5 mb-5">
-                                <h2>{{ $item->title }} <em>{{ $item->title_highlight }}</em></h2>
+                            <h2>{{ $item->title }} <em>{{ $item->title_highlight }}</em></h2>
                         </div>
                     </div>
                     <div class="row mb-5">
-                        @foreach ($detail as $item)
+                        @foreach ($item->detail as $detail)
                             <div class="col-lg-3 mb-5" data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
                                 <div class="features-item">
                                     <div class="features-icon">
-                                        <img src="{{ asset('storage/landingpage/detail/' . $item->image) }}">
-                                        <h4>{{ $item->title }}</h4>
-                                        <p>{{ $item->desc }}</p>
+                                        <img src="{{ asset('storage/landingpage/detail/' . $detail->image) }}">
+                                        <h4>{{ $detail->title }}</h4>
+                                        <p>{{ $detail->desc }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +197,7 @@
     <!-- ***** MANFAAT END ***** -->
 
 
-    
+
 
     <!-- ***** footer Starts ***** -->
     <footer class="mt-5 pt-5" id="kontak">

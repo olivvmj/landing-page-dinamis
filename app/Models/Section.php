@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\SectionType;
+use App\Models\DetailSection;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
@@ -24,11 +25,16 @@ class Section extends Model
         'menu',
         'description',
         'image',
+        'section_code'
     ];
 
     public function SectionType()
     {
         return $this->belongsTo(SectionType::class, 'type_id', 'id');
+    }
+
+    public function Detail(){
+        return $this->belongsTo(DetailSection::class, 'type_id', 'id');
     }
 }
 

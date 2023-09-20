@@ -74,7 +74,7 @@
 	});
 
 	$(document).ready(function () {
-		$('a[href^="#welcome"]').addClass('active');
+		$('a[href^=".welcome"]').addClass('active');
 
 		//smoothscroll
 		$('.menu-item').on('click', function (e) {
@@ -97,7 +97,7 @@
 			var scrollPos = $(document).scrollTop() + 80;
 
 			if (scrollPos === 0) {
-				$('a[href^="#welcome"]').addClass('active');
+				$('a[href^=".welcome"]').addClass('active');
 				return;
 			}
 			$('.menu-item').not('[href=""]').not('[href="javascript:;"]').each(function () {

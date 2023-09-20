@@ -63,14 +63,13 @@
                         <div class="modal-body">
                             <form id="form" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="image_lama" id="image_lama">
                                 <input type="hidden" id="id" name="id">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
                                                 <label for="type_id" class="form-label">Menu</label>
-                                                <select class="form-select" name="menu_section" aria-label="Default select example">
+                                                <select class="form-select" id="menu_section" name="menu_section" aria-label="Default select example">
                                                     <option disabled selected>Pilih Menu</option>
                                                     @foreach ($section as $item)
                                                         <option value="{{ $item->id }}" {{ old('menu_section', '') == $item->id ? 'selected' : '' }}>
@@ -131,7 +130,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 
 
-    <script src="https://cdn.jsdelivr.net/npm/dropify/dist/js/dropify.min.js"></script>
+    <script src="{{ asset('admin') }}/assets/js/cdn.jsdelivr.net_npm_dropify_dist_js_dropify.js"></script>
 
     <!-- DATA TABLE JS-->
 
@@ -335,38 +334,31 @@
                 $('#modal_form').modal('show');
                 $('.modal-title').text('Edit Data Detail Section');
                 // $('.dropify').dropify();
-                $('#menu_section').val(data.section_id);
+                $('#menu_section').val(data.section_id).change();;
                 $('#menu').val(data.menu);
                 $('#title').val(data.title);
                 $('#desc').val(data.desc);
-                $('#image').attr(`data-default-file`, `{{ asset('storage/landingpage/detail') }}/` + data.image);
-                $('.img-preview').append(`{{ asset('storage/landingpage/detail') }}/` + data.image);
-                let img = `{{ asset('storage/landingpage/detail') }}/` + data.image;
-                $('.dropify-preview').show();
-                $('.dropify-render').empty().append(`<img src="${img}">`)
 
-                // var imageName = data.about.image;
-
-                // df = df.data('dropify');
-                // df.resetPreview();
-                // df.clearElement();
-                // df.settings.defaultFile = `{{ asset('storage/landingpage/detail') }}/` + data.image;
-                // df.destroy();
-                // df.init();
-
+                df = df.data('dropify');
+                df.resetPreview();
+                df.clearElement();
+                df.settings.defaultFile = `{{ asset('storage/landingpage/detail') }}/` + data.image;
+                df.destroy();
+                df.init();
                 previewImage();
             });
         }
         
-        function submit() {
+        function submit() {            
             var id = $('#id').val();
+            // console.log(id);
             var form = $('#form')[0];
             var formData = new FormData(form);
+
+            // console.log($('#modal_form #image').val());
         
-            var image = $('#image')[0].files[0];
-            // var image = $('#image').prop('files')[0];
-            // var submit_method = '';
-            // console.log(judul);            
+            var image = $('#image')[0].files[0]; 
+            // console.log(image);
             var url = "{{ route('kelola-detail.store') }}";
 
             $('#btnSave').text('Menyimpan...');
@@ -376,7 +368,9 @@
                 var url = "{{ route('kelola-detail.update', ':id') }}";
                 url = url.replace(':id', id);
                 formData.append('_method', 'PUT');
-            }          
+
+                // console.log(url);
+            }                
 
             $.ajax({
                 url: url,
@@ -390,10 +384,8 @@
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data);
                     if (data.status) {
                         var section = data.section;
-                        console.log("section:", section);
                         $('#modal_form').modal('hide');
                         Swal.fire({
                             toast: false,
