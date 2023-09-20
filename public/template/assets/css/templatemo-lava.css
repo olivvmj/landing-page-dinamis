@@ -299,7 +299,7 @@ header
 
 
 .header-area .main-nav .nav {
-  float: left;
+  /* float: left; */
   margin-top: 27px;
   margin-left: 50%;
   margin-right: 0px;
@@ -1017,12 +1017,12 @@ footer .sub-footer p {
 }
 
 /* WELCOME AREA */
-#welcome .container{
+.welcome .container{
   background-image: url(../images/banner-bg.png);
   background-repeat: no-repeat;
 }
 
-#welcome .left-content h2 {
+.welcome .left-content h2 {
   color: rgba(45.35, 60.14, 137.77, 0.92);
   font-size: 40px;
   font-family: Poppins;
@@ -1032,28 +1032,28 @@ footer .sub-footer p {
   margin-bottom: auto;
 }
 
-#welcome .left-content em {
+.welcome .left-content em {
   color: #FF8B00;
   font-style: normal;
 }
 
-#welcome .left-content p {
+.welcome .left-content p {
   color: #ffff;
 }
 
-#welcome .header{
+.welcome .header{
   margin-left: 30px;
   margin-top: 60px;
 }
 
-#welcome .header-text .left-text {
+.welcome .header-text .left-text {
   position: relative;
   align-self: center;
   margin-top: 21%;
   transform: perspective(1px) translateY(-30%) !important;
 }
 
-#welcome .header-text h1 {
+.welcome .header-text h1 {
   font-weight: 500;
   font-size: 52px;
   line-height: 80px;
@@ -1062,7 +1062,7 @@ footer .sub-footer p {
   color: #DCDFF3;
 }
 
-#welcome .header-text h1 em {
+.welcome .header-text h1 em {
   font-style: normal;
   color: #F2AD45;
 }
@@ -1077,32 +1077,32 @@ footer .sub-footer p {
   margin-top: -200px;
 }
 
-#welcome {
+.welcome {
   padding: 0px 0px;
   margin-top: 130px;
 }
 
-#welcome .left-image {
+.welcome .left-image {
   margin-top: 30px;
   align-self: center;
   max-width: 350px;
 }
 
-#welcome .right-text ul {
+.welcome .right-text ul {
   padding: 0;
   margin-top: 50px;
 }
 
-#welcome .right-text ul li {
+.welcome .right-text ul li {
   display: inline-block;
   margin-bottom: 60px;
 }
 
-#welcome .right-text ul li:last-child {
+.welcome .right-text ul li:last-child {
   margin-bottom: 0px;
 }
 
-#welcome .right-text img {
+.welcome .right-text img {
   display: inline-block;
   max-width: 70%;
   margin-top: 21%;
@@ -1110,7 +1110,7 @@ footer .sub-footer p {
   margin-right: 30px;
 }
 
-#welcome .right-text h4 {
+.welcome .right-text h4 {
   font-size: 22px;
   color: #1e1e1e;
   margin-bottom: 15px;
@@ -1118,7 +1118,7 @@ footer .sub-footer p {
 }
 
 /* SOLUSI */
-#solusi .left-content h2 {
+.solusi .left-content h2 {
   color: rgba(45.35, 60.14, 137.77, 0.92);
   font-size: 40px;
   font-family: Poppins;
@@ -1128,7 +1128,7 @@ footer .sub-footer p {
   margin-bottom: auto;
 }
 
-#solusi .left-content em {
+.solusi .left-content em {
   color: #FF8B00;
   font-style: normal;
 }
@@ -1144,36 +1144,36 @@ footer .sub-footer p {
   margin-top: -200px;
 }
 
-#solusi {
+.solusi {
   padding: 70px 0px;
 }
 
-#solusi .left-image {
+.solusi .left-image {
   margin-top: 30px;
   align-self: center;
 }
 
-#solusi .right-text ul {
+.solusi .right-text ul {
   padding: 0;
   margin-top: 50px;
 }
 
-#solusi .right-text ul li {
+.solusi .right-text ul li {
   display: inline-block;
   margin-bottom: 60px;
 }
 
-#solusi .right-text ul li:last-child {
+.solusi .right-text ul li:last-child {
   margin-bottom: 0px;
 }
 
-#solusi .right-text img {
+.solusi .right-text img {
   display: inline-block;
   float: left;
   margin-right: 30px;
 }
 
-#solusi .right-text h4 {
+.solusi .right-text h4 {
   font-size: 22px;
   color: #1e1e1e;
   margin-bottom: 15px;
@@ -1253,15 +1253,15 @@ manfaat
 
 
 /* FITUR */
-#fitur {
+.fitur {
   transition: all 0.3s;
 }
 
-#fitur .features-item:hover{
+.fitur .features-item:hover{
   transform: scale(1.05);
 }
 
-#fitur .left-content h2 {
+.fitur .left-content h2 {
   color: rgba(45.35, 60.14, 137.77, 0.92);
   font-size: 40px;
   font-family: Poppins;
@@ -1271,7 +1271,7 @@ manfaat
   margin-bottom: auto;
 }
 
-#fitur .left-content em {
+.fitur .left-content em {
   color: #FF8B00;
   font-style: normal;
 }

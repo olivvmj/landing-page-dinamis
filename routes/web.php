@@ -33,18 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('kelola-tentang/datatable', [TentangController::class, 'datatable'])->name('kelola-tentang.datatable');
-    Route::resource('kelola-tentang', TentangController::class);
-
-    Route::get('kelola-solusi/datatable', [SolusiController::class, 'datatable'])->name('kelola-solusi.datatable');
-    Route::resource('kelola-solusi', SolusiController::class);
-
-    Route::get('kelola-manfaat/datatable', [ManfaatController::class, 'datatable'])->name('kelola-manfaat.datatable');
-    Route::resource('kelola-manfaat', ManfaatController::class);
-
-    Route::get('kelola-fitur/datatable', [FiturController::class, 'datatable'])->name('kelola-fitur.datatable');
-    Route::resource('kelola-fitur', FiturController::class);
-
     Route::get('kelola-section/datatable', [SectionController::class, 'datatable'])->name('kelola-section.datatable');
     Route::resource('kelola-section', SectionController::class);
 

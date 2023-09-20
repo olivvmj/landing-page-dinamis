@@ -53,7 +53,7 @@ class SectionController extends Controller
             'title'=> 'required',
             'title_highlight'=> 'required',
             'menu'=> 'required',
-            'image'=> 'required|image|mimes:jpg,png,jpeg',
+            'image'=> 'sometimes|image|mimes:jpg,png,jpeg',
         ]);
 
         if($validatedData->stopOnFirstFailure()->fails()) 
@@ -79,6 +79,7 @@ class SectionController extends Controller
             'menu'=> $request->menu,
             'description'=> $request->description,
             'image'=> $filename,
+            'section_code' => Str::uuid()
         ]);
         
         // dd($request);
@@ -155,10 +156,10 @@ class SectionController extends Controller
             $path = 'landingpage/section/'.$filename;
             Storage::disk('local')->put($path, file_get_contents($image));
 
-            if ($section->image && file_exists($section->image)) {
-                unlink($section->image);
+            if ($detail->image && file_exists($detail->image)) {
+                unlink($detail->image);
+            }else{
             }
-            $section->image = $filename;
         }
         // $section->image= $filename;
         $section->save();

@@ -65,22 +65,14 @@
                         <div class="modal-body">
                             <form id="form" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="image_lama" id="image_lama">
                                 <input type="hidden" id="id" name="id">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="mb-3">
                                                 <label for="type_id" class="form-label">Tipe Section</label>
-                                                {{-- <select class="form-select" name="type_section" aria-label="Default select example">
-                                                    <option selected>Pilih Tipe Section</option>
-                                                    @foreach ($type as $item)
-                                                        <option value="{{ old($item->id) }}">{{ $item->type_name }}</option>
-                                                    @endforeach
-                                                </select> --}}
-                                                <select class="form-select" name="type_section" aria-label="Default select example" id="type_section">
+                                                <select class="form-select" name="type_section" id="type_section" aria-label="Default select example" id="type_section">
                                                     <option disabled selected>Pilih Tipe Section</option>
-                                                    {{-- <option disabled>Pilih Tipe Section</option> --}}
                                                     @foreach ($type as $item)
                                                         <option value="{{ $item->id }}" {{ old('type_section', '') == $item->id ? 'selected' : '' }}>
                                                             {{ $item->type_name }}
@@ -133,7 +125,6 @@
                                         <div class="form-group">
                                             <div class="mb-3">
                                                 <label for="image" class="form-label">Gambar</label>
-                                                {{-- <input type="file" id="image" class="dropify" name="image" accept=".png, .jpg, .jpeg" --}}
                                                 <input id="image" class="dropify" type="file" name="image" data-default-file="" data-allowed-file-extensions="jpeg jpg png" accept=".png, .jpg, .jpeg">
                                                 <p class="small">format gambar : png, jpg, jpeg</p>
                                             </div>
@@ -161,8 +152,7 @@
     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 
-
-    <script src="https://cdn.jsdelivr.net/npm/dropify/dist/js/dropify.min.js"></script>
+    <script src="{{ asset('admin') }}/assets/js/cdn.jsdelivr.net_npm_dropify_dist_js_dropify.js"></script>
 
     <!-- DATA TABLE JS-->
 
@@ -261,16 +251,6 @@
                             }
                         }
                     },
-                    // {
-                    //     targets: 5,
-                    //     createdCell: function(td, cellData, rowData, row, col) {
-                    //         $(td).html(cellData);
-                    //         if (cellData.length > 150) {
-                    //             let txt = cellData;
-                    //             $(td).text(txt.substr(0, 150) + '...');
-                    //         }
-                    //     }
-                    // },
                     {
                         targets: 5,
                         createdCell: function(td, cellData, rowData, row, col) {

@@ -15,16 +15,23 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('kelola-section.index') }}">
             <i class="bi bi-info-circle"></i>
-            <span>Manajemen Konten</span>
+            <span>Menu</span>
         </a>
     </li>
 
     <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('kelola-detail.index') }}">
             <i class="bi bi-lightbulb"></i>
-            <span>Detail Konten</span>
+            <span>Detail Menu</span>
         </a>
     </li>
+
+    {{-- <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('kelola-app.index') }}">
+            <i class="bi bi-lightbulb"></i>
+            <span>CMS APP</span>
+        </a>
+    </li> --}}
 
     {{--<li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('kelola-manfaat.index') }}">
